@@ -1,0 +1,81 @@
+# =========================
+# dAppearance (Warp-like)
+# =========================
+
+background = #0a0e14
+foreground = #b3b1ad
+
+background-opacity = 0.92
+
+selection-background = #1a1f29
+selection-foreground = #ffffff
+
+cursor-color = #22d3ee
+cursor-style = bar
+
+
+# =========================
+# Palette (Warp inspired)
+# =========================
+
+palette = 0=#000000
+palette = 1=#ff6b6b
+palette = 2=#69ff94
+palette = 3=#ffffa5
+palette = 4=#6cb6ff
+palette = 5=#d4a5ff
+palette = 6=#22d3ee
+palette = 7=#c7c7c7
+palette = 8=#676767
+palette = 9=#ff8080
+palette = 10=#85ffab
+palette = 11=#ffffcc
+palette = 12=#a5d4ff
+palette = 13=#e5c6ff
+palette = 14=#6be5f7
+palette = 15=#ffffff
+
+
+# =========================
+# Font (Warp-like)
+# =========================
+font-family = "JetBrains Mono"
+font-size = 15
+
+font-thicken = true
+font-feature = -liga
+
+
+# =========================
+# Window (important)
+# =========================
+
+window-decoration = true
+macos-titlebar-style = transparent
+
+window-padding-x = 14
+window-padding-y = 14
+
+#renderer = metal
+
+
+# =========================
+# Warp-like Quick Terminal
+# =========================
+
+
+keybind = global:cmd+alt+m=toggle_quick_terminal
+quick-terminal-position = bottom
+quick-terminal-animation-duration = 0
+quick-terminal-size = 70%
+
+#macos-option-as-alt = right
+quick-terminal-autohide = false
+quick-terminal-space-behavior = move
+
+
+copy-on-select = clipboard
+
+keybind = shift+up=scroll_page_lines:-50
+keybind = shift+down=scroll_page_lines:50
+
