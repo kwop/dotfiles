@@ -12,8 +12,8 @@
 
 fpath=(~/.zsh/completions $fpath)
 
-export PATH="$PATH:/Users/belaz/Applications/Android\ Studio.app/Contents/jbr/Contents/Home/bin"
-export JAVA_HOME="/Users/belaz/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export PATH="$PATH:$HOME/Applications/Android\ Studio.app/Contents/jbr/Contents/Home/bin"
+export JAVA_HOME="$HOME/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export PATH="$PATH":"$HOME/.pub-cache/bin:$HOME/go/bin:$HOME/Library/Android/sdk/platform-tools"
 
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
@@ -23,13 +23,13 @@ LC_ALL=en_US.UTF-8
 # fpath and completion initialization (must be before bashcompinit)
 fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fpath=(~/.zsh/completion $fpath)
-fpath=(/Users/belaz/.docker/completions $fpath)
+fpath=($HOME/.docker/completions $fpath)
 
 
 # Aliases
 alias kctx="kubectx"
 alias kns="kubens"
-alias adb='/Users/belaz/Library/Android/sdk/platform-tools/adb'
+alias adb='$HOME/Library/Android/sdk/platform-tools/adb'
 alias m='make'
 alias curl='noglob curl'
 alias k=kubectl
@@ -54,14 +54,14 @@ export PATH="$PATH:$HOME/.local/bin:$HOME/.docker/bin"
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
 # Dart CLI completion
-[[ -f /Users/belaz/.dart-cli-completion/zsh-config.zsh ]] && . /Users/belaz/.dart-cli-completion/zsh-config.zsh || true
+[[ -f $HOME/.dart-cli-completion/zsh-config.zsh ]] && . $HOME/.dart-cli-completion/zsh-config.zsh || true
 
 # Google Cloud SDK
-if [ -f '/Users/belaz/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/belaz/google-cloud-sdk/path.zsh.inc'; fi
-if [ -f '/Users/belaz/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/belaz/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
 # Shorebird
-export PATH="/Users/belaz/.shorebird/bin:$PATH"
+export PATH="$HOME/.shorebird/bin:$PATH"
 
 # Powerlevel10k
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
@@ -113,4 +113,4 @@ fi
 
 
 # Bun completions
-[ -s "/Users/belaz/.bun/_bun" ] && source "/Users/belaz/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
