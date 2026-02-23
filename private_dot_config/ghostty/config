@@ -1,5 +1,5 @@
 # =========================
-# dAppearance (Warp-like)
+# Appearance (Warp-like)
 # =========================
 
 background = #0a0e14
@@ -39,7 +39,7 @@ palette = 15=#ffffff
 # =========================
 # Font (Warp-like)
 # =========================
-font-family = "JetBrains Mono"
+font-family = "JetBrainsMono Nerd Font"
 font-size = 15
 
 font-thicken = true
@@ -64,13 +64,15 @@ window-padding-y = 14
 # =========================
 
 
-keybind = global:cmd+alt+m=toggle_quick_terminal
+keybind = global:ctrl+alt+m=toggle_quick_terminal
+#keybind = global:caps_lock+caps_lock=toggle_quick_terminal
+
 quick-terminal-position = bottom
 quick-terminal-animation-duration = 0
-quick-terminal-size = 70%
+quick-terminal-size = 100%
 
 #macos-option-as-alt = right
-quick-terminal-autohide = false
+quick-terminal-autohide = true
 quick-terminal-space-behavior = move
 
 

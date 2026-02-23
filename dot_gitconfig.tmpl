@@ -1,0 +1,17 @@
+# This is Git's per-user configuration file.
+[user]
+	email = {{ .email }}
+	name = {{ .name }}
+[alias]
+	cm = commit -m
+	s = status -s
+	st = status -sb -uno
+    lg = "log --name-only --color --no-merges --graph --pretty=îformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+	mrdevelop = !$(echo git rev-parse --abbrev-ref HEAD) |  xargs -I {} git push -o merge_request.assign={{ .gitlab_username }}  -o merge_request.label=develop -o merge_request.create -o merge_request.remove_source_branch -o merge_request.target=develop --set-upstream origin  {}
+	mr = !$(echo git rev-parse --abbrev-ref HEAD) |  xargs -I {} git push -o merge_request.assign={{ .gitlab_username }}  -o merge_request.label=develop -o merge_request.create -o merge_request.remove_source_branch -o merge_request.target=develop --set-upstream origin  {}
+[status]
+	submoduleSummary = true
+[push]
+	autoSetupRemote = true
+[tag]
+    sort = -creatordate

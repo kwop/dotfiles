@@ -5,13 +5,16 @@
 #   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 # fi
 
+# DÉSACTIVÉ: Conflit avec carapace/zoxide/fzf causant 100% CPU
+# Voir: https://github.com/marlonrichert/zsh-autocomplete/issues/709
+# source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+
+
 fpath=(~/.zsh/completions $fpath)
-autoload -Uz compinit && compinit
 
 export PATH="$PATH:/Users/belaz/Applications/Android\ Studio.app/Contents/jbr/Contents/Home/bin"
 export JAVA_HOME="/Users/belaz/Applications/Android Studio.app/Contents/jbr/Contents/Home"
-export PATH="$PATH":"$HOME/.pub-cache/bin"
-export PATH="$PATH":"$HOME/Library/Android/sdk/platform-tools"
+export PATH="$PATH":"$HOME/.pub-cache/bin:$HOME/go/bin:$HOME/Library/Android/sdk/platform-tools"
 
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
 
@@ -22,20 +25,14 @@ fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fpath=(~/.zsh/completion $fpath)
 fpath=(/Users/belaz/.docker/completions $fpath)
 
-autoload -Uz compinit
-compinit
-
-autoload -Uz bashcompinit && bashcompinit
 
 # Aliases
 alias kctx="kubectx"
-alias ll="ls -lah"
 alias kns="kubens"
 alias adb='/Users/belaz/Library/Android/sdk/platform-tools/adb'
 alias m='make'
 alias curl='noglob curl'
 alias k=kubectl
-alias claudemux='tmux new-session -A -s claude "claude"'
 
 
 # NVM
@@ -81,7 +78,15 @@ export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
 zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 source <(carapace _carapace)
 
-eval "$(zoxide init --cmd cd zsh)"
+if command -v zoxide &> /dev/null; then
+  if [[ -z "$CLAUDECODE" ]]; then
+    # Shell normal : zoxide remplace cd
+    eval "$(zoxide init --cmd cd zsh)"
+  else
+    # Shell Claude : zoxide utilise 'z', cd reste natif (évite bug snapshot)
+    eval "$(zoxide init zsh)"
+  fi
+fi
 
 source <(fzf --zsh)
 
@@ -98,13 +103,14 @@ alias zi='_zedit idea'
 
 eval "$(starship init zsh)"
 
+ # Eza aliases (désactivés pour Claude Code car --icons cause des erreurs)
+if [[ -z "$CLAUDECODE" ]]; then
+   alias ls='eza -a --git --icons --group-directories-first'
+   alias ll='eza -la --git --git-repos --icons'
+   alias la='eza -la --git --git-repos --icons'
+   alias lt='eza --tree --level=2 --icons'
+fi
 
-alias ls='eza -a -git --icons --group-directories-first'
-alias ll='eza -l --git --icons'
-alias la='eza -la --git --icons'
-alias lt='eza --tree --level=2 --icons'
-
-source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 # Bun completions
 [ -s "/Users/belaz/.bun/_bun" ] && source "/Users/belaz/.bun/_bun"
