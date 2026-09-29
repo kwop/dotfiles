@@ -1,0 +1,31 @@
+add_newline = false
+
+format = "[[](bold black bg:#ccff00) $directory ](bg:#ccff00)[[](bold #ffffff bg:#0088ff) $git_branch$git_status ](bg:#0088ff)$line_break$character"
+# Partie droite (utilisateur courant) : RPROMPT dans ~/.zshrc
+[directory]
+format = " [ ](bold black bg:#ccff00)[ $path]($style)"
+style = "bold black bg:#ccff00"
+truncation_length = 0
+truncate_to_repo = false
+
+[character]
+success_symbol = "❯ "
+error_symbol = "❯ "
+
+[git_branch]
+format = " [ ](bold #22d3ee bg:#0088ff)[ $branch]($style)"
+style = "bold #ffffff bg:#0088ff"
+
+[git_status]
+format = " [$all_status$ahead_behind]($style)"
+style = "bold #ffffff bg:#0088ff"
+staged = " [+${count} staged](bold #00ff88 bg:#0088ff)"
+modified = " [~${count} modified](bold #ffff00 bg:#0088ff)"
+untracked = " [?${count} untracked](bold #ffffff bg:#0088ff)"
+deleted = " [-${count} deleted](bold #ff4444 bg:#0088ff)"
+renamed = " [»${count} renamed](bold #00ffff bg:#0088ff)"
+stashed = ""
+ahead = " [⇡${count} ahead](bold #00ff88 bg:#0088ff)"
+behind = " [⇣${count} behind](bold #ff4444 bg:#0088ff)"
+diverged = " [⇕${count} diverged](bold #ff4444 bg:#0088ff)"
+conflicted = " [!${count} conflicted](bold #ff4444 bg:#0088ff)"
