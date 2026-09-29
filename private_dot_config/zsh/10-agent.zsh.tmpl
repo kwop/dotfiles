@@ -3,6 +3,8 @@
 # Déployée uniquement pour agent : voir .chezmoiignore.
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="$HOME/.local/bin:$PATH"
+# Flutter/Dart : SDK courant de fvm et exécutables `dart pub global`
+export PATH="$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
 
 if [[ -o interactive ]]; then
     SSH_AGENT_DIR="$HOME/.ssh/agent"
