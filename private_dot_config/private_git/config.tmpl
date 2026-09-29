@@ -1,0 +1,32 @@
+# Config git de chaque compte (belaz, agent). Git lit ce fichier puis ~/.gitconfig.
+# La partie propre au compte vient des [data] de son chezmoi.toml (hors repo) :
+#   email + name   identité de commit par défaut
+#   git_ssh_key    clé de ~/.ssh utilisée par git (sinon : choix de ssh)
+#   git_includes   config par dossier ({gitdir, path}), prioritaire sur ce qui précède
+[alias]
+	cm = commit -m
+	s = status -s
+	st = status -sb -uno
+    lg = "log --name-only --color --no-merges --graph --pretty=îformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+[status]
+	submoduleSummary = true
+[push]
+	autoSetupRemote = true
+[tag]
+    sort = -creatordate
+{{- if and (hasKey . "email") (hasKey . "name") }}
+
+[user]
+	email = {{ .email }}
+	name = {{ .name }}
+{{- end }}
+{{- if hasKey . "git_ssh_key" }}
+
+[core]
+	sshCommand = ssh -i ~/.ssh/{{ .git_ssh_key }} -o IdentitiesOnly=yes
+{{- end }}
+{{- if hasKey . "git_includes" }}{{ range .git_includes }}
+
+[includeIf "gitdir:{{ .gitdir }}"]
+	path = {{ .path }}
+{{- end }}{{ end }}

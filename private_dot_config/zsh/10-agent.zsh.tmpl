@@ -23,13 +23,21 @@ if [[ -o interactive ]]; then
             >/dev/null
     fi
 
-    GITLAB_KEY="$HOME/.ssh/gitlab-sa-agent"
+    # Clés à déverrouiller : [data] ssh_keys dans ~/.config/chezmoi/chezmoi.toml de l'agent
+    SSH_KEYS=({{ range (get . "ssh_keys" | default (list "gitlab-sa-agent")) }}{{ . | squote }} {{ end }})
 
-    # Is our GitLab key loaded?
-    KEY_FP="$(ssh-keygen -lf "$GITLAB_KEY.pub" | awk '{print $2}')"
+    for GITLAB_KEY in "$HOME/.ssh/"${^SSH_KEYS}; do
+        if [[ ! -r "$GITLAB_KEY.pub" ]]; then
+            echo "Clé SSH introuvable : $GITLAB_KEY" >&2
+            continue
+        fi
 
-    if ! ssh-add -l 2>/dev/null | grep -Fq "$KEY_FP"; then
-        echo "Unlock GitLab SSH key:"
-        ssh-add -t 4h "$GITLAB_KEY"
-    fi
+        # Is this key loaded?
+        KEY_FP="$(ssh-keygen -lf "$GITLAB_KEY.pub" | awk '{print $2}')"
+
+        if ! ssh-add -l 2>/dev/null | grep -Fq "$KEY_FP"; then
+            echo "Unlock SSH key ${GITLAB_KEY:t}:"
+            ssh-add -t 4h "$GITLAB_KEY"
+        fi
+    done
 fi
