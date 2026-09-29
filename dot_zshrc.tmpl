@@ -1,0 +1,15 @@
+# ~/.zshrc, géré par chezmoi (repo kwop/dotfiles) : modifier la source, pas ce fichier.
+# La config est découpée en modules dans ~/.config/zsh, chargés par ordre alphabétique.
+# Chaque compte ne reçoit que ses modules : voir .chezmoiignore.
+{{- if ne .chezmoi.username "belaz" }}
+
+# Compte secondaire : resynchronise la config depuis la source de belaz avant de charger
+# les modules. Non bloquant : en cas d'échec, la config déjà en place est conservée.
+if [[ -o interactive && -x /opt/homebrew/bin/chezmoi ]]; then
+  /opt/homebrew/bin/chezmoi apply --force --no-tty >/dev/null 2>&1 ||
+    print -u2 "chezmoi apply a échoué, config actuelle conservée (détails : chezmoi apply)"
+fi
+{{- end }}
+
+for f in ~/.config/zsh/*.zsh(N); do source "$f"; done
+unset f

@@ -1,7 +1,7 @@
 add_newline = false
 
 format = "[[](bold black bg:#ccff00) $directory ](bg:#ccff00)[[](bold #ffffff bg:#0088ff) $git_branch$git_status ](bg:#0088ff)$line_break$character"
-# Partie droite (utilisateur courant) : RPROMPT dans ~/.zshrc
+# Partie droite (utilisateur courant) : RPROMPT dans ~/.config/zsh/50-prompt.zsh
 [directory]
 format = " [ ](bold black bg:#ccff00)[ $path]($style)"
 style = "bold black bg:#ccff00"

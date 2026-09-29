@@ -1,0 +1,13 @@
+# Config git commune à belaz et agent. Git lit ce fichier puis ~/.gitconfig, qui garde
+# l'identité et les alias GitLab propres à belaz.
+[alias]
+	cm = commit -m
+	s = status -s
+	st = status -sb -uno
+    lg = "log --name-only --color --no-merges --graph --pretty=îformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+[status]
+	submoduleSummary = true
+[push]
+	autoSetupRemote = true
+[tag]
+    sort = -creatordate

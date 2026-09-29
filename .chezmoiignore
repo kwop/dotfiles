@@ -1,0 +1,22 @@
+# Liste blanche : belaz reçoit tout, les autres comptes uniquement ce qui est listé ici
+# (un fichier ajouté au repo n'est donc jamais partagé par défaut). Les motifs en `!`
+# l'emportent sur `**`. Un dossier parent doit aussi être listé pour que son contenu passe.
+{{- if ne .chezmoi.username "belaz" }}
+**
+!.zshrc
+!.config
+!.config/zsh
+!.config/zsh/50-prompt.zsh
+!.config/zsh/60-eza.zsh
+!.config/zsh/90-zoxide.zsh
+!.config/starship.toml
+!.config/zellij
+!.config/zellij/config.kdl
+!.config/git
+!.config/git/config
+{{- if eq .chezmoi.username "agent" }}
+!.config/zsh/10-agent.zsh
+{{- end }}
+{{- else }}
+.config/zsh/10-agent.zsh
+{{- end }}

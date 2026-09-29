@@ -1,3 +1,6 @@
+# Config propre à belaz (outils de dev, chemins, complétions). Jamais déployée sur les
+# autres comptes : voir .chezmoiignore. Les parties communes sont dans les autres modules.
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -78,17 +81,6 @@ export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
 zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 source <(carapace _carapace)
 
-# zoxide (à garder vers la fin du .zshrc, recommandation zoxide)
-if command -v zoxide &> /dev/null; then
-  if [[ -z "$CLAUDECODE" ]]; then
-    # Shell normal : zoxide remplace cd
-    eval "$(zoxide init --cmd cd zsh)"
-  else
-    # Shell Claude : zoxide utilise 'z', cd reste natif (évite bug snapshot)
-    eval "$(zoxide init zsh)"
-  fi
-fi
-
 source <(fzf --zsh)
 
 _zedit() {
@@ -102,39 +94,9 @@ alias zf='_zedit nvim'
 alias zc='_zedit code'
 alias zi='_zedit idea'
 
-# Configs starship/zellij : fixées explicitement dans le home, pour écraser une valeur
-# héritée d'un shell parent qui pointerait encore vers /Users/Shared
-export STARSHIP_CONFIG="$HOME/.config/starship.toml"
-export ZELLIJ_CONFIG_FILE="$HOME/.config/zellij/config.kdl"
-eval "$(starship init zsh)"
-# Utilisateur courant à droite du prompt (après `starship init zsh`, qui pose son propre RPROMPT)
-() {
-  local -a couleurs=(d4a5ff 22d3ee ffb86c ffffa5 69ff94 6cb6ff ff79c6)
-  local fond c
-  local -i h=0
-  if (( EUID == 0 )); then
-    fond=ff4444
-  else
-    for c in ${(s::)USERNAME}; do (( h = (h * 31 + #c) % 2147483647 )); done
-    fond=${couleurs[h % $#couleurs + 1]}
-  fi
-  RPROMPT="%B%F{black}%K{#$fond} "$''" %n %k%f%b"
-}
-
-# Eza aliases (désactivés pour Claude Code car --icons cause des erreurs)
-if [[ -z "$CLAUDECODE" ]] && (( $+commands[eza] )); then
-   alias ls='eza -a --git --icons --group-directories-first'
-   unalias ll la lt 2>/dev/null
-   ll() { eza -lag --git --git-repos --icons "$@"; }
-   la() { eza -la --git --git-repos --icons "$@"; }
-   lt() { eza --tree --level=2 --icons "$@"; }
-   (( $+functions[compdef] )) && compdef _eza ll la lt
-fi
-
-
 # Bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 
 # Added by Antigravity CLI installer
-export PATH="/Users/belaz/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
