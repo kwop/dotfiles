@@ -14,6 +14,7 @@
 !.config/zellij/config.kdl
 !.config/git
 !.config/git/config
+!git-includes.sh
 {{- if eq .chezmoi.username "agent" }}
 !.config/zsh/10-agent.zsh
 {{- end }}

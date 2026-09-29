@@ -3,6 +3,7 @@
 #   email + name   identité de commit par défaut
 #   git_ssh_key    clé de ~/.ssh utilisée par git (sinon : choix de ssh)
 #   git_includes   config par dossier ({gitdir, path}), prioritaire sur ce qui précède
+#                  + ssh_key facultatif : fichier `path` rempli par run_onchange_after_git-includes.sh
 [alias]
 	cm = commit -m
 	s = status -s

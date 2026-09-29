@@ -1,0 +1,9 @@
+#!/bin/sh
+# Écrit la clé SSH dans le fichier de chaque entrée git_includes qui déclare une ssh_key
+# ([data] du chezmoi.toml du compte). Ne touche qu'à core.sshCommand : le reste du
+# fichier (identité…) est conservé. Relancé par chezmoi quand ce rendu change.
+set -e
+{{- if hasKey . "git_includes" }}{{ range .git_includes }}{{ if hasKey . "ssh_key" }}
+{{- $p := .path }}
+git config --file {{ if hasPrefix "~/" $p }}"$HOME"/{{ trimPrefix "~/" $p | squote }}{{ else }}{{ $p | squote }}{{ end }} core.sshCommand {{ printf "ssh -i ~/.ssh/%s -o IdentitiesOnly=yes" .ssh_key | squote }}
+{{- end }}{{ end }}{{ end }}
