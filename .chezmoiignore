@@ -1,7 +1,11 @@
-# Liste blanche : belaz reçoit tout, les autres comptes uniquement ce qui est listé ici
-# (un fichier ajouté au repo n'est donc jamais partagé par défaut). Les motifs en `!`
+# Qui reçoit quoi dépend de `profil` dans les [data] du chezmoi.toml de chaque compte :
+#   complet  tout le repo (sauf le module agent)
+#   agent    la liste blanche ci-dessous + le module agent
+#   absent   la liste blanche seule (défaut le plus restrictif)
+# Un fichier ajouté au repo n'est donc jamais partagé par défaut. Les motifs en `!`
 # l'emportent sur `**`. Un dossier parent doit aussi être listé pour que son contenu passe.
-{{- if ne .chezmoi.username "belaz" }}
+{{- $profil := get . "profil" | default "restreint" }}
+{{- if ne $profil "complet" }}
 **
 !.zshrc
 !.config
@@ -15,7 +19,7 @@
 !.config/git
 !.config/git/config
 !git-includes.sh
-{{- if eq .chezmoi.username "agent" }}
+{{- if eq $profil "agent" }}
 !.config/zsh/10-agent.zsh
 {{- end }}
 {{- else }}

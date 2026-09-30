@@ -88,9 +88,9 @@ on-mode-changed = []
 [mode.main.binding]
 alt-f = 'fullscreen'
 # Reconstruit le workspace 1 en deux accordéons verticaux (gauche/droite)
-alt-shift-a = 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh'
+alt-shift-a = 'exec-and-forget ~/.config/aerospace/two-accordions.sh'
 # Reconstruit le workspace 2 en un seul accordéon vertical plein écran
-alt-shift-z = 'exec-and-forget /Users/belaz/.config/aerospace/single-accordion.sh 2'
+alt-shift-z = 'exec-and-forget ~/.config/aerospace/single-accordion.sh 2'
 alt-shift-q = 'layout v_accordion'
 alt-shift-t = 'layout h_tiles'
 alt-shift-s = 'split horizontal'
@@ -190,35 +190,35 @@ alt-shift-left = 'exec-and-forget aerospace list-workspaces --all | aerospace wo
 # cela transformerait l'accordéon vertical en tuiles horizontales.
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'org.whispersystems.signal-desktop'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.anthropic.claudefordesktop'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'net.whatsapp.WhatsApp'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.MobileSMS'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.apple.systempreferences'
-run = ['move-node-to-workspace 1', 'exec-and-forget /Users/belaz/.config/aerospace/two-accordions.sh']
+run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
 
 [[on-window-detected]]
 if.app-id = 'com.electron.dockerdesktop'
@@ -229,19 +229,19 @@ run = 'move-node-to-workspace 5'
 # v_accordion à la racine à chaque nouvelle fenêtre.
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'
-run = ['move-node-to-workspace 2', 'exec-and-forget /Users/belaz/.config/aerospace/single-accordion.sh 2']
+run = ['move-node-to-workspace 2', 'exec-and-forget ~/.config/aerospace/single-accordion.sh 2']
 
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.datagrip'
-run = ['move-node-to-workspace 2', 'exec-and-forget /Users/belaz/.config/aerospace/single-accordion.sh 2']
+run = ['move-node-to-workspace 2', 'exec-and-forget ~/.config/aerospace/single-accordion.sh 2']
 
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
-run = ['move-node-to-workspace 2', 'exec-and-forget /Users/belaz/.config/aerospace/single-accordion.sh 2']
+run = ['move-node-to-workspace 2', 'exec-and-forget ~/.config/aerospace/single-accordion.sh 2']
 
 [[on-window-detected]]
 if.app-id = 'com.google.android.studio'
-run = ['move-node-to-workspace 2', 'exec-and-forget /Users/belaz/.config/aerospace/single-accordion.sh 2']
+run = ['move-node-to-workspace 2', 'exec-and-forget ~/.config/aerospace/single-accordion.sh 2']
 
 
  
