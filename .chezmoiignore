@@ -4,6 +4,9 @@
 #   absent   la liste blanche seule (défaut le plus restrictif)
 # Un fichier ajouté au repo n'est donc jamais partagé par défaut. Les motifs en `!`
 # l'emportent sur `**`. Un dossier parent doit aussi être listé pour que son contenu passe.
+# Secrets locaux (tokens…) dans ~/.config/zsh : jamais gérés par chezmoi, même par un
+# `chezmoi add` du dossier. Chargés au démarrage comme les autres modules.
+.config/zsh/*secrets*.zsh
 {{- $profil := get . "profil" | default "restreint" }}
 {{- if ne $profil "complet" }}
 **
