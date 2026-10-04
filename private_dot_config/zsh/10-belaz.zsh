@@ -95,9 +95,18 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 
 source <(fzf --zsh)
 
-# zsh-autosuggestions : suggestion grisée depuis l'historique, → pour l'accepter.
-# Après fzf-tab, qui doit être chargé avant les plugins qui enveloppent les widgets.
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# deja : suggestion grisée prédictive (dossier courant, fréquence, commande
+# précédente), à la place de zsh-autosuggestions (deja s'efface si les deux sont
+# chargés). Après fzf-tab, qui doit être chargé avant les plugins qui enveloppent
+# les widgets. Tab reste à fzf-tab : DEJA_CYCLE_KEY vide = pas de liaison.
+# Revenir en arrière : remettre
+#   source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+export DEJA_CYCLE_KEY=
+if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
+  source "$HOME/.local/share/deja/init.zsh"
+else
+  eval "$(deja init zsh)"
+fi
 
 # o [requête] : ouvre n'importe quel fichier dans VS Code, sans changer de dossier.
 #   o ssh/config  -> ouvre directement ~/.ssh/config (chemin existant : pas de fzf)

@@ -1,6 +1,7 @@
 tap "backendsystems/tap"
 tap "dart-lang/dart"
 tap "fairwindsops/tap", "https://github.com/FairwindsOps/homebrew-tap"
+tap "giammarco-ferranti/deja"
 tap "hashicorp/tap"
 tap "jandedobbeleer/oh-my-posh"
 tap "mobile-dev-inc/tap"
@@ -152,6 +153,8 @@ brew "zoxide"
 brew "zsh-autocomplete"
 # Fish-like fast/unobtrusive autosuggestions for zsh
 brew "zsh-autosuggestions"
+# Predictive inline shell autosuggestions for zsh
+brew "giammarco-ferranti/deja/deja"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace", trusted: true
 # Anthropic's official Claude AI desktop app
