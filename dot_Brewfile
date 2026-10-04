@@ -54,6 +54,8 @@ brew "firebase-cli"
 brew "fvm"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Replace zsh completion selection menu with fzf
+brew "fzf-tab"
 # Open-source GitLab command-line tool
 brew "glab"
 # Open source programming language to build simple/reliable/efficient software

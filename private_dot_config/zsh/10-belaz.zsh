@@ -8,8 +8,9 @@
 #   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 # fi
 
-# DÉSACTIVÉ: Conflit avec carapace/zoxide/fzf causant 100% CPU
-# Voir: https://github.com/marlonrichert/zsh-autocomplete/issues/709
+# DÉSACTIVÉ : casse l'affichage de Zellij (testé en 26.08.04). Avant ça : conflit
+# carapace/zoxide/fzf causant 100% CPU, voir
+# https://github.com/marlonrichert/zsh-autocomplete/issues/709
 # source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 
@@ -27,6 +28,8 @@ LC_ALL=en_US.UTF-8
 fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fpath=(~/.zsh/completion $fpath)
 fpath=($HOME/.docker/completions $fpath)
+# compinit explicite : avant, il n'était lancé que par le bash_completion de nvm.
+autoload -Uz compinit && compinit
 
 
 # Aliases
@@ -77,11 +80,24 @@ if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
   unset PROMPT_EOL_MARK
 fi
 
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-source <(carapace _carapace)
+# DÉSACTIVÉ : carapace, avec zsh-autocomplete, cassait l'affichage de Zellij.
+# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+# source <(carapace _carapace)
+
+# fzf-tab : menu de complétion (Tab) dans fzf. Doit venir après compinit et avant
+# `fzf --zsh`, dont la complétion '**' retombe sur fzf-tab pour tout le reste.
+source /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'   # groupes ; pas de codes couleur ici
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:*' switch-group '<' '>'
 
 source <(fzf --zsh)
+
+# zsh-autosuggestions : suggestion grisée depuis l'historique, → pour l'accepter.
+# Après fzf-tab, qui doit être chargé avant les plugins qui enveloppent les widgets.
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 _zedit() {
   local editor=$1 dir=$(zoxide query "$2" 2>/dev/null)
