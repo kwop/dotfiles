@@ -2,11 +2,16 @@
 # Range les fenêtres du workspace 1 en deux colonnes côte à côte, chacune en
 # accordéon vertical (une seule fenêtre visible par côté).
 # Chaque application est envoyée dans la colonne définie ci-dessous.
-# Déclenché par on-window-detected (nouvelle fenêtre) ou par alt-shift-a.
+# Déclenché par on-window-detected (nouvelle fenêtre) ou par alt-shift-a
+# (avec --force : reconstruction inconditionnelle).
+# Les fenêtres flottantes (dialogues, alertes, demandes d'autorisation…) ne
+# déclenchent rien et restent hors des colonnes.
 set -u
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 WS=1
+FORCE=0
+[ "${1:-}" = "--force" ] && FORCE=1
 
 # ---- Affectation des applications (bundle id) à une colonne ----------------
 RIGHT_APPS="com.google.Chrome"
@@ -14,6 +19,16 @@ LEFT_APPS="org.whispersystems.signal-desktop net.whatsapp.WhatsApp com.apple.Mob
 DEFAULT_SIDE="left"   # colonne des applications non listées
 LEFT_WIDTH_PCT=40     # largeur de la colonne gauche en % de l'écran (la droite prend le reste)
 # -----------------------------------------------------------------------------
+
+# AeroSpace transmet la fenêtre détectée dans AEROSPACE_WINDOW_ID. Si elle est
+# flottante (ou déjà refermée), il n'y a rien à ranger. Ce test passe avant
+# l'anti-rafale pour ne pas annuler la reconstruction demandée juste avant par
+# une vraie fenêtre.
+if (( ! FORCE )) && [ -n "${AEROSPACE_WINDOW_ID:-}" ]; then
+  layout=$(aerospace list-windows --all --format '%{window-id}|%{window-layout}' \
+    | awk -F'|' -v id="$AEROSPACE_WINDOW_ID" '$1 == id { print $2 }')
+  case "$layout" in ''|floating) exit 0 ;; esac
+fi
 
 # Anti-rafale : si plusieurs fenêtres sont détectées d'un coup (ex. démarrage
 # d'AeroSpace), seule la dernière instance lancée reconstruit la disposition.
@@ -34,15 +49,16 @@ done
 
 focused=$(aerospace list-windows --focused --format '%{window-id}' 2>/dev/null || true)
 
-# Partition gauche/droite selon l'application
+# Partition gauche/droite selon l'application (les flottantes restent à part)
 left=() right=()
-while read -r id app; do
+while IFS='|' read -r id layout app; do
   [ -n "$id" ] || continue
+  [ "$layout" = floating ] && continue
   side=$DEFAULT_SIDE
   case " $LEFT_APPS "  in *" $app "*) side=left ;; esac
   case " $RIGHT_APPS " in *" $app "*) side=right ;; esac
   if [ "$side" = left ]; then left+=("$id"); else right+=("$id"); fi
-done < <(aerospace list-windows --workspace "$WS" --format '%{window-id} %{app-bundle-id}')
+done < <(aerospace list-windows --workspace "$WS" --format '%{window-id}|%{window-layout}|%{app-bundle-id}')
 
 n=$(( ${#left[@]} + ${#right[@]} ))
 (( n < 2 )) && exit 0
