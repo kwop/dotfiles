@@ -99,16 +99,25 @@ source <(fzf --zsh)
 # Après fzf-tab, qui doit être chargé avant les plugins qui enveloppent les widgets.
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-_zedit() {
-  local editor=$1 dir=$(zoxide query "$2" 2>/dev/null)
-  [[ -z "$dir" ]] && echo "Dossier non trouvé" && return 1
-  local file=$(fd --type f . "$dir" | fzf --preview 'bat --color=always {}' 2>/dev/null)
-  [[ -n "$file" ]] && $editor "$file"
+# o [requête] : ouvre n'importe quel fichier dans VS Code, sans changer de dossier.
+#   o ssh/config  -> ouvre directement ~/.ssh/config (chemin existant : pas de fzf)
+#   o aero        -> fzf pré-rempli ; ~/.ssh, ~/.config et les dotfiles passent en premier
+# Pas de recherche dans tout le home : .wine (liens en boucle), Library et les caches
+# donnent 16M fichiers et 1min40. --scheme=history : à score égal, l'ordre de la liste
+# (donc les dossiers de config) l'emporte.
+o() {
+  local q="$*" f
+  for f in "$q" ~/"$q" ~/."$q"; do
+    [[ -n $q && -f $f ]] && { code "$f"; return }
+  done
+  f=$( {
+      fd --type f --hidden --max-depth 1 --base-directory ~ .
+      fd --type f --hidden --base-directory ~ . .ssh .config
+      fd --type f --hidden --exclude .git --exclude node_modules --base-directory ~ . Documents Desktop Downloads
+    } 2>/dev/null | fzf --query="$q" --scheme=history \
+        --preview "bat --color=always --style=numbers $HOME/{}" --preview-window=right,60%
+  ) && code ~/"$f"
 }
-
-alias zf='_zedit nvim'
-alias zc='_zedit code'
-alias zi='_zedit idea'
 
 # Bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
