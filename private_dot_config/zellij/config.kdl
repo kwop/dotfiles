@@ -213,6 +213,9 @@ keybinds clear-defaults=true {
         bind "x" { CloseFocus; SwitchToMode "normal"; }
     }
     shared_among "scroll" "search" {
+        // ( et ) plutôt que [ et ] : sur AZERTY Mac, les crochets demandent Option+Maj
+        bind "(" { ScrollToPreviousPrompt; }
+        bind ")" { ScrollToNextPrompt; }
         bind "PageDown" { PageScrollDown; }
         bind "PageUp" { PageScrollUp; }
         bind "left" { PageScrollUp; }
