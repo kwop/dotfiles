@@ -1,16 +1,19 @@
-add_newline = false
+add_newline = true
 
 format = "[[](bold black bg:#ccff00) $directory ](bg:#ccff00)[[](bold #ffffff bg:#0088ff) $git_branch$git_status ](bg:#0088ff)$line_break$character"
 # Partie droite (utilisateur courant) : RPROMPT dans ~/.config/zsh/50-prompt.zsh
 [directory]
 format = " [ ](bold black bg:#ccff00)[ $path]($style)"
 style = "bold black bg:#ccff00"
-truncation_length = 0
+# Dossier courant + 3 dossiers au-dessus. truncate_to_repo couperait à la racine
+# du repo (seulement « …/hmrkt » à la racine de hmrkt).
+truncation_length = 4
 truncate_to_repo = false
+truncation_symbol = "…/"
 
 [character]
-success_symbol = "❯ "
-error_symbol = "❯ "
+success_symbol = "[❯](bold green) "
+error_symbol = "[❯](bold red) "
 
 [git_branch]
 format = " [ ](bold #22d3ee bg:#0088ff)[ $branch]($style)"
