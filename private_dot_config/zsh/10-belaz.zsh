@@ -93,6 +93,12 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
+# Couleurs : fzf (dont fzf-tab, Ctrl R et `o`) et bat suivent la palette du terminal
+# (thème Ghostty). Sans --color=16, fzf garde son propre jeu de 256 couleurs.
+export FZF_DEFAULT_OPTS='--color=16'
+export BAT_THEME=ansi
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
+
 source <(fzf --zsh)
 
 # deja : suggestion grisée prédictive (dossier courant, fréquence, commande

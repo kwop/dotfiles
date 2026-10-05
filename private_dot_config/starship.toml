@@ -1,10 +1,11 @@
 add_newline = true
 
-format = "[[](bold black bg:#ccff00) $directory ](bg:#ccff00)[[](bold #ffffff bg:#0088ff) $git_branch$git_status ](bg:#0088ff)$line_break$character"
+format = "[[](bold black bg:blue) $directory ](bg:blue)[[](bold bright-white bg:black) $git_branch$git_status ](bg:black)$line_break$character"
+# Couleurs : noms ANSI (pas de #hex) pour suivre le thème du terminal (Ghostty).
 # Partie droite (utilisateur courant) : RPROMPT dans ~/.config/zsh/50-prompt.zsh
 [directory]
-format = " [ ](bold black bg:#ccff00)[ $path]($style)"
-style = "bold black bg:#ccff00"
+format = " [ ](bold black bg:blue)[ $path]($style)"
+style = "bold black bg:blue"
 # Dossier courant + 3 dossiers au-dessus. truncate_to_repo couperait à la racine
 # du repo (seulement « …/hmrkt » à la racine de hmrkt).
 truncation_length = 4
@@ -16,19 +17,19 @@ success_symbol = "[❯](bold green) "
 error_symbol = "[❯](bold red) "
 
 [git_branch]
-format = " [ ](bold #22d3ee bg:#0088ff)[ $branch]($style)"
-style = "bold #ffffff bg:#0088ff"
+format = " [ ](bold cyan bg:black)[ $branch]($style)"
+style = "bold purple bg:black"
 
 [git_status]
 format = " [$all_status$ahead_behind]($style)"
-style = "bold #ffffff bg:#0088ff"
-staged = " [+${count} staged](bold #00ff88 bg:#0088ff)"
-modified = " [~${count} modified](bold #ffff00 bg:#0088ff)"
-untracked = " [?${count} untracked](bold #ffffff bg:#0088ff)"
-deleted = " [-${count} deleted](bold #ff4444 bg:#0088ff)"
-renamed = " [»${count} renamed](bold #00ffff bg:#0088ff)"
+style = "bold bright-white bg:black"
+staged = " [+${count} staged](bold green bg:black)"
+modified = " [~${count} modified](bold yellow bg:black)"
+untracked = " [?${count} untracked](bold bright-white bg:black)"
+deleted = " [-${count} deleted](bold red bg:black)"
+renamed = " [»${count} renamed](bold cyan bg:black)"
 stashed = ""
-ahead = " [⇡${count} ahead](bold #00ff88 bg:#0088ff)"
-behind = " [⇣${count} behind](bold #ff4444 bg:#0088ff)"
-diverged = " [⇕${count} diverged](bold #ff4444 bg:#0088ff)"
-conflicted = " [!${count} conflicted](bold #ff4444 bg:#0088ff)"
+ahead = " [⇡${count} ahead](bold green bg:black)"
+behind = " [⇣${count} behind](bold red bg:black)"
+diverged = " [⇕${count} diverged](bold red bg:black)"
+conflicted = " [!${count} conflicted](bold red bg:black)"

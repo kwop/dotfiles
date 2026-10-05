@@ -356,6 +356,9 @@ web_client {
 //   - false
 // 
 pane_frames false
+
+// Même thème que Ghostty (theme = Catppuccin Mocha), intégré à Zellij
+theme "catppuccin-mocha"
  
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)

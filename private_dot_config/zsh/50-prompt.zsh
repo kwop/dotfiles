@@ -9,15 +9,17 @@ eval "$(starship init zsh)"
 # (partagé entre belaz et agent). À sourcer APRÈS `starship init zsh`, qui pose son
 # propre RPROMPT. Couleur dérivée d'un hash du nom : stable d'une session à l'autre,
 # calculée une fois au démarrage (starship ne sait pas styler selon l'utilisateur).
+# Couleurs = numéros de la palette du terminal (5 violet, 6 cyan, 11 jaune vif,
+# 3 jaune, 2 vert, 4 bleu, 13 rose ; 1 rouge pour root) : elles suivent le thème Ghostty.
 () {
-  local -a couleurs=(d4a5ff 22d3ee ffb86c ffffa5 69ff94 6cb6ff ff79c6)
+  local -a couleurs=(5 6 11 3 2 4 13)
   local fond c
   local -i h=0
   if (( EUID == 0 )); then
-    fond=ff4444
+    fond=1
   else
     for c in ${(s::)USERNAME}; do (( h = (h * 31 + #c) % 2147483647 )); done
     fond=${couleurs[h % $#couleurs + 1]}
   fi
-  RPROMPT="%B%F{black}%K{#$fond} "$''" %n %k%f%b"
+  RPROMPT="%B%F{black}%K{$fond} "$''" %n %k%f%b"
 }
