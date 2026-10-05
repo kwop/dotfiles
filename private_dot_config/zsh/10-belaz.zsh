@@ -108,6 +108,26 @@ else
   eval "$(deja init zsh)"
 fi
 
+# Double Tab rapide : accepte la suggestion de deja au lieu d'ouvrir fzf-tab.
+# Tab seul : complétion habituelle (fzf, puis fzf-tab), après 0,25 s d'attente
+# uniquement quand une suggestion est affichée. Nom en _… : deja n'enveloppe pas
+# ces widgets, POSTDISPLAY est donc encore intact ici. forward-char, lui, est
+# enveloppé par deja (comme →) et accepte la suggestion en fin de ligne.
+_tab_accept_or_complete() {
+  local k
+  if [[ -n $POSTDISPLAY ]] && read -k 1 -t 0.25 k; then
+    if [[ $k == $'\t' ]]; then
+      CURSOR=$#BUFFER
+      zle forward-char
+      return
+    fi
+    zle -U -- "$k"
+  fi
+  zle fzf-completion
+}
+zle -N _tab_accept_or_complete
+bindkey '^I' _tab_accept_or_complete
+
 # o [requête] : ouvre n'importe quel fichier dans VS Code, sans changer de dossier.
 #   o ssh/config  -> ouvre directement ~/.ssh/config (chemin existant : pas de fzf)
 #   o aero        -> fzf pré-rempli ; ~/.ssh, ~/.config et les dotfiles passent en premier
