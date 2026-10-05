@@ -43,6 +43,8 @@ brew "cloudflared"
 brew "cmake"
 # Dependency manager for Cocoa projects
 brew "cocoapods"
+# Select default apps for documents and URL schemes on macOS
+brew "duti"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
