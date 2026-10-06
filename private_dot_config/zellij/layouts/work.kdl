@@ -1,0 +1,109 @@
+layout {
+    cwd "/Users/belaz/Documents/code"
+
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="status-bar"
+        }
+    }
+
+    tab name="paramedic" focus=true hide_floating_panes=true {
+        pane stacked=true {
+            pane command="claude" name="agent local-fullstack" cwd="paramedic/local-fullstack" {
+                args "--chrome"
+                start_suspended true
+            }
+            pane command="claude" name="agent worktree-4d29" cwd="paramedic/worktrees/local-fullstack-4d29" {
+                args "--chrome"
+                start_suspended true
+            }
+            pane command="claude" name="agent worktree-26c5" cwd="paramedic/worktrees/local-fullstack-26c5" {
+                args "--chrome"
+                start_suspended true
+            }
+            pane command="claude" name="agent app-amiral" cwd="paramedic/app-amiral" focus=true expanded=true {
+                start_suspended true
+            }
+            pane command="claude" name="agent local-fullstack" cwd="paramedic/local-fullstack" {
+                args "--chrome"
+                start_suspended true
+            }
+            pane command="claude" name="agent infra" cwd="paramedic/infra-paramedic" {
+                start_suspended true
+            }
+            pane command="claude" name="agent app-paramedic" cwd="paramedic/app-paramedic" {
+                start_suspended true
+            }
+        }
+        floating_panes {
+            pane cwd="paramedic/worktrees/local-fullstack-26c5" {
+                height 26
+                width 98
+                x 13
+                y 1
+            }
+        }
+    }
+
+    tab name="hmrkt" cwd="/Users/Shared/code/hmrkt" hide_floating_panes=true {
+        pane stacked=true {
+            pane command="claude" expanded=true {
+                start_suspended true
+            }
+            pane name="agent hmrkt"
+        }
+        floating_panes {
+            pane {
+                height 26
+                width 98
+                x 0
+                y 1
+            }
+        }
+    }
+
+    tab name="misc" hide_floating_panes=true {
+        pane size="44%" split_direction="vertical" {
+            pane cwd="/Users/belaz/mcp/docker" size="48%"
+            pane cwd="/Users/belaz/mcp/docker" size="52%"
+        }
+        pane cwd="/Users/Shared/code/hmrkt" size="56%"
+        floating_panes {
+            pane cwd="/Users/Shared/code/hmrkt" {
+                height 26
+                width 98
+                x 37
+                y 13
+            }
+            pane {
+                height 26
+                width 98
+                x 49
+                y 15
+            }
+        }
+    }
+
+    tab name="gitlab-mcp" hide_floating_panes=true {
+        pane stacked=true {
+            pane command="claude" cwd="gitlab-mcp" expanded=true {
+                start_suspended true
+            }
+            pane command="claude" cwd="gitlab-mcp" {
+                start_suspended true
+            }
+        }
+        floating_panes {
+            pane cwd="gitlab-mcp" {
+                height 26
+                width 98
+                x 0
+                y 16
+            }
+        }
+    }
+}
