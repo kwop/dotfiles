@@ -7,10 +7,13 @@
       "complex_modifications": {
         "rules": [
           {
-            "description": "Caps Lock : tap = ⌃⌥M, maintenu = ⌃⌥",
+            "description": "Caps Lock (clavier interne) : tap = ⌃⌥M, maintenu = ⌃⌥",
             "manipulators": [
               {
                 "type": "basic",
+                "conditions": [
+                  { "type": "device_if", "identifiers": [{ "is_built_in_keyboard": true }] }
+                ],
                 "from": { "key_code": "caps_lock", "modifiers": { "optional": ["any"] } },
                 "to": [{ "key_code": "left_control", "modifiers": ["left_option"] }],
                 "to_if_alone": [{ "key_code": "semicolon", "modifiers": ["left_control", "left_option"] }],
