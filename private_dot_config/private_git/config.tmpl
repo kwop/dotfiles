@@ -15,6 +15,11 @@
 	autoSetupRemote = true
 [tag]
     sort = -creatordate
+# pull (rebase ou merge) possible avec des fichiers modifiés : stash auto avant, réappliqué après
+[rebase]
+	autoStash = true
+[merge]
+	autoStash = true
 {{- if and (hasKey . "email") (hasKey . "name") }}
 
 [user]
