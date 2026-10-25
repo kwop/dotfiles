@@ -162,6 +162,13 @@ keybinds clear-defaults=true {
         bind "Alt p" { TogglePaneInGroup; }
         bind "Alt Shift p" { ToggleGroupMarking; }
         bind "Ctrl q" { Quit; }
+        // Harpoon (github.com/Nacho114/harpoon, v0.3.0) : panes favoris. Plugin
+        // téléchargé à la main dans ~/.config/zellij/plugins, hors chezmoi (essai).
+        bind "Ctrl y" {
+            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/harpoon.wasm" {
+                floating true; move_to_focused_tab true;
+            }
+        }
     }
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }
