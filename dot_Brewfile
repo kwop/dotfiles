@@ -171,6 +171,8 @@ cask "ghostty"
 cask "godot"
 # Vector graphics editor
 cask "inkscape"
+# Keyboard customiser (Caps Lock : tap = ⌃⌥M, maintenu = ⌃⌥)
+cask "karabiner-elements"
 # GPU-based terminal emulator
 cask "kitty"
 # Reverse proxy, secure introspectable tunnels to localhost
