@@ -104,10 +104,16 @@ source <(fzf --zsh)
 # deja : suggestion grisée prédictive (dossier courant, fréquence, commande
 # précédente), à la place de zsh-autosuggestions (deja s'efface si les deux sont
 # chargés). Après fzf-tab, qui doit être chargé avant les plugins qui enveloppent
-# les widgets. Tab reste à fzf-tab : DEJA_CYCLE_KEY vide = pas de liaison.
-# Revenir en arrière : remettre
+# les widgets. Revenir en arrière : remettre
 #   source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-export DEJA_CYCLE_KEY=
+# Touches (à définir avant le chargement ; vide = pas de liaison) :
+# - Tab reste à fzf-tab ; Shift+→ passe à la suggestion suivante (par défaut sur Tab).
+# - Shift+← efface la suggestion affichée. Une Shift+flèche sans liaison insérerait
+#   des caractères parasites (« [1;2D »).
+# - Niveau de tolérance du flou (par défaut sur Shift+←/→) : `deja fuzzy loose|smart|tight`.
+export DEJA_CYCLE_KEY='^[[1;2C'
+export DEJA_DISMISS_KEY='^[[1;2D'
+export DEJA_CYCLE_FUZZY_KEY= DEJA_CYCLE_FUZZY_BACK_KEY=
 if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
   source "$HOME/.local/share/deja/init.zsh"
 else
