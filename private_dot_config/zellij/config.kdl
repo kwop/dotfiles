@@ -149,6 +149,8 @@ keybinds clear-defaults=true {
         bind "Ctrl Alt [" { PreviousSwapLayout; }
         bind "Ctrl Alt ]" { NextSwapLayout; }
         bind "Ctrl Alt f" { ToggleFloatingPanes; }
+        // Même action côté main droite (touche $ de l'AZERTY Mac)
+        bind "Ctrl Alt $" { ToggleFloatingPanes; }
         bind "Ctrl Alt h" { MoveFocusOrTab "left"; }
         bind "Ctrl Alt i" { MoveTab "left"; }
         bind "Ctrl Alt j" { MoveFocus "down"; }
