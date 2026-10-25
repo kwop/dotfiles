@@ -4,6 +4,9 @@
 # Chaque application est envoyée dans la colonne définie ci-dessous.
 # Déclenché par on-window-detected (nouvelle fenêtre) ou par alt-shift-a
 # (avec --force : reconstruction inconditionnelle).
+# Avec --resize-only (callbacks de focus / workspace / écran) : ne reconstruit
+# rien, réapplique seulement la largeur de la colonne gauche quand le
+# workspace a changé d'écran.
 # Les fenêtres flottantes (dialogues, alertes, demandes d'autorisation…) ne
 # déclenchent rien et restent hors des colonnes.
 set -u
@@ -11,14 +14,74 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 WS=1
 FORCE=0
-[ "${1:-}" = "--force" ] && FORCE=1
+RESIZE_ONLY=0
+case "${1:-}" in
+  --force) FORCE=1 ;;
+  --resize-only) RESIZE_ONLY=1 ;;
+esac
 
 # ---- Affectation des applications (bundle id) à une colonne ----------------
 RIGHT_APPS="com.google.Chrome"
 LEFT_APPS="org.whispersystems.signal-desktop net.whatsapp.WhatsApp com.apple.MobileSMS com.anthropic.claudefordesktop com.openai.chat com.apple.finder com.apple.systempreferences"
 DEFAULT_SIDE="left"   # colonne des applications non listées
-LEFT_WIDTH_PCT=40     # largeur de la colonne gauche en % de l'écran (la droite prend le reste)
+LEFT_WIDTH_PCT=25     # largeur de la colonne gauche en % de l'écran (la droite prend le reste)
 # -----------------------------------------------------------------------------
+
+PIDFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.pid"
+LOCKDIR="${TMPDIR:-/tmp}/aerospace-two-accordions.lock"
+# Nom de l'écran sur lequel la largeur a été appliquée pour la dernière fois
+STATEFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.monitor"
+
+# Partition gauche/droite selon l'application (les flottantes restent à part)
+partition() {
+  left=() right=() left_anchor=""
+  local id layout app side
+  while IFS='|' read -r id layout app; do
+    [ -n "$id" ] || continue
+    [ "$layout" = floating ] && continue
+    side=$DEFAULT_SIDE
+    case " $LEFT_APPS "  in *" $app "*) side=left; left_anchor=${left_anchor:-$id} ;; esac
+    case " $RIGHT_APPS " in *" $app "*) side=right ;; esac
+    if [ "$side" = left ]; then left+=("$id"); else right+=("$id"); fi
+  done < <(aerospace list-windows --workspace "$WS" --format '%{window-id}|%{window-layout}|%{app-bundle-id}')
+}
+
+# Largeur relative des colonnes, recalculée à partir de la largeur réelle de
+# l'écran qui héberge le workspace. AeroSpace ne conserve pas les proportions
+# quand le workspace change d'écran : il répartit la différence de largeur à
+# parts égales entre les colonnes, ce qui écrase la colonne étroite sur un
+# écran plus petit.
+# D'où le mode --resize-only, qui rappelle cette fonction après un changement
+# d'écran.
+apply_width() {
+  (( ${#left[@]} > 0 && ${#right[@]} > 0 )) || return 0
+  local idx monitor screen_w
+  IFS='|' read -r idx monitor < <(aerospace list-windows --workspace "$WS" \
+    --format '%{monitor-appkit-nsscreen-screens-id}|%{monitor-name}' | head -n1)
+  screen_w=$(osascript -l JavaScript -e \
+    'ObjC.import("AppKit"); $.NSScreen.screens.js.map(s => s.frame.size.width).join("\n")' \
+    2>/dev/null | sed -n "${idx}p" | cut -d. -f1)
+  if [ -n "${screen_w:-}" ] && [ "$screen_w" -gt 0 ] 2>/dev/null; then
+    # Redimensionner via une appli explicitement à gauche : une fenêtre d'une
+    # appli non listée a pu s'ouvrir ailleurs depuis la dernière reconstruction.
+    aerospace resize --window-id "${left_anchor:-${left[0]}}" width $(( screen_w * LEFT_WIDTH_PCT / 100 )) \
+      && echo "$monitor" > "$STATEFILE"
+  fi
+}
+
+# Mode léger, appelé à chaque changement de focus : un seul appel à aerospace
+# tant que le workspace reste visible sur le même écran.
+if (( RESIZE_ONLY )); then
+  [ -d "$LOCKDIR" ] && exit 0   # une reconstruction est en cours
+  ws_info=$(aerospace list-workspaces --all --format '%{workspace}|%{workspace-is-visible}|%{monitor-name}' \
+    | awk -F'|' -v ws="$WS" '$1 == ws { print $2 "|" $3 }')
+  [ "${ws_info%%|*}" = true ] || exit 0   # invisible : ses colonnes ne sont pas encore redisposées
+  [ "$(cat "$STATEFILE" 2>/dev/null)" = "${ws_info#*|}" ] && exit 0
+  sleep 0.3   # laisser AeroSpace finir de redisposer le workspace sur le nouvel écran
+  partition
+  apply_width
+  exit 0
+fi
 
 # AeroSpace transmet la fenêtre détectée dans AEROSPACE_WINDOW_ID. Si elle est
 # flottante (ou déjà refermée), il n'y a rien à ranger. Ce test passe avant
@@ -32,13 +95,11 @@ fi
 
 # Anti-rafale : si plusieurs fenêtres sont détectées d'un coup (ex. démarrage
 # d'AeroSpace), seule la dernière instance lancée reconstruit la disposition.
-PIDFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.pid"
 echo $$ > "$PIDFILE"
 sleep 0.4
 [ "$(cat "$PIDFILE" 2>/dev/null)" = "$$" ] || exit 0
 
 # Verrou : ne pas reconstruire pendant qu'une autre instance reconstruit déjà.
-LOCKDIR="${TMPDIR:-/tmp}/aerospace-two-accordions.lock"
 for _ in $(seq 1 25); do
   if mkdir "$LOCKDIR" 2>/dev/null; then
     trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
@@ -49,16 +110,7 @@ done
 
 focused=$(aerospace list-windows --focused --format '%{window-id}' 2>/dev/null || true)
 
-# Partition gauche/droite selon l'application (les flottantes restent à part)
-left=() right=()
-while IFS='|' read -r id layout app; do
-  [ -n "$id" ] || continue
-  [ "$layout" = floating ] && continue
-  side=$DEFAULT_SIDE
-  case " $LEFT_APPS "  in *" $app "*) side=left ;; esac
-  case " $RIGHT_APPS " in *" $app "*) side=right ;; esac
-  if [ "$side" = left ]; then left+=("$id"); else right+=("$id"); fi
-done < <(aerospace list-windows --workspace "$WS" --format '%{window-id}|%{window-layout}|%{app-bundle-id}')
+partition
 
 n=$(( ${#left[@]} + ${#right[@]} ))
 (( n < 2 )) && exit 0
@@ -90,17 +142,7 @@ build_column() {
 (( ${#left[@]}  > 0 )) && build_column "${left[@]}"
 (( ${#right[@]} > 0 )) && build_column "${right[@]}"
 
-# Largeur relative des colonnes : on recalcule à partir de la largeur réelle
-# de l'écran qui héberge le workspace, pour rester correct en changeant d'écran.
-if (( ${#left[@]} > 0 && ${#right[@]} > 0 )); then
-  idx=$(aerospace list-windows --workspace "$WS" --format '%{monitor-appkit-nsscreen-screens-id}' | head -n1)
-  screen_w=$(osascript -l JavaScript -e \
-    'ObjC.import("AppKit"); $.NSScreen.screens.js.map(s => s.frame.size.width).join("\n")' \
-    2>/dev/null | sed -n "${idx}p" | cut -d. -f1)
-  if [ -n "${screen_w:-}" ] && [ "$screen_w" -gt 0 ] 2>/dev/null; then
-    aerospace resize --window-id "${left[0]}" width $(( screen_w * LEFT_WIDTH_PCT / 100 ))
-  fi
-fi
+apply_width
 
 # Restaurer le focus initial
 [ -n "$focused" ] && aerospace focus --window-id "$focused" 2>/dev/null
