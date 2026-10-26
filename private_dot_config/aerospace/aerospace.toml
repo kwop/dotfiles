@@ -140,6 +140,15 @@ ctrl-shift-right = 'layout accordion vertical'
     ctrl-alt-cmd-down = 'focus down'
     ctrl-alt-cmd-up = 'focus up'
     ctrl-alt-cmd-right = 'focus right'
+    # Hyper (Caps Lock maintenu, via Karabiner) + flèches. Dans Ghostty, Karabiner
+    # renvoie ⌃⌥ + flèches à la place pour naviguer dans les panes Zellij.
+    # Gauche/droite : passe à l'autre écran s'il y en a un de ce côté ; au bord
+    # extérieur, passe au workspace précédent/suivant de l'écran (en boucle) et
+    # sélectionne la fenêtre la plus proche du bord d'arrivée.
+    cmd-ctrl-alt-shift-left = '''exec-and-forget aerospace focus left --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin prev && n=$(aerospace list-windows --workspace focused --count) && [ "$n" -gt 0 ] && aerospace focus --dfs-index $((n-1)); }'''
+    cmd-ctrl-alt-shift-right = '''exec-and-forget aerospace focus right --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin next && aerospace focus --dfs-index 0; }'''
+    cmd-ctrl-alt-shift-down = 'focus down'
+    cmd-ctrl-alt-shift-up = 'focus up'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
  
@@ -150,6 +159,9 @@ ctrl-shift-right = 'layout accordion vertical'
     # Positions QWERTY -> AZERTY : 'equal' = touche '-', 'slash' = touche '='.
     ctrl-alt-cmd-equal = 'resize smart -50'
     ctrl-alt-cmd-slash = 'resize smart +50'
+    # Hyper + '-' / '=' (dans Ghostty : resize des panes Zellij via Karabiner)
+    cmd-ctrl-alt-shift-equal = 'resize smart -50'
+    cmd-ctrl-alt-shift-slash = 'resize smart +50'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
     ctrl-alt-1 = 'workspace 1'
@@ -157,6 +169,12 @@ ctrl-shift-right = 'layout accordion vertical'
     ctrl-alt-3 = 'workspace 3'
     ctrl-alt-4 = 'workspace 4'
     ctrl-alt-5 = 'workspace 5'
+    # Hyper (Caps Lock maintenu) + chiffre
+    cmd-ctrl-alt-shift-1 = 'workspace 1'
+    cmd-ctrl-alt-shift-2 = 'workspace 2'
+    cmd-ctrl-alt-shift-3 = 'workspace 3'
+    cmd-ctrl-alt-shift-4 = 'workspace 4'
+    cmd-ctrl-alt-shift-5 = 'workspace 5'
 
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
