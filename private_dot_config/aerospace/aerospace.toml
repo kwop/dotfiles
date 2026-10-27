@@ -40,7 +40,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center', 'exec-and-forget
 # Workspace 1 : AeroSpace ne garde pas le ratio 25/75 des colonnes quand le
 # workspace change d'écran (MacBook <-> écran externe). Ces callbacks font
 # réappliquer la largeur ; le script ne fait rien tant que l'écran ne change pas.
-on-focus-changed = ['exec-and-forget ~/.config/aerospace/two-accordions.sh --resize-only']
+on-focus-changed = ['exec-and-forget ~/.config/aerospace/two-accordions.sh --resize-only', 'exec-and-forget ~/.config/borders/flash.sh']
 exec-on-workspace-change = ['/bin/bash', '-c', '~/.config/aerospace/two-accordions.sh --resize-only']
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
