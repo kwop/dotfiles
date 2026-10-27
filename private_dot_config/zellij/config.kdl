@@ -138,7 +138,9 @@ keybinds clear-defaults=true {
             SwitchToMode "normal"
         }
     }
-    shared_among "normal" "locked" {
+    // Aussi en scroll et search : sinon, une fois remonté dans l'historique, la
+    // navigation et les panes flottants ne répondent plus.
+    shared_among "normal" "locked" "scroll" "search" {
         bind "Ctrl Alt left" { MoveFocusOrTab "left"; }
         bind "Ctrl Alt down" { MoveFocus "down"; }
         bind "Ctrl Alt up" { MoveFocus "up"; }
