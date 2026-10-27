@@ -25,6 +25,8 @@ RIGHT_APPS="com.google.Chrome"
 LEFT_APPS="org.whispersystems.signal-desktop net.whatsapp.WhatsApp com.apple.MobileSMS com.anthropic.claudefordesktop com.openai.chat com.apple.finder com.apple.systempreferences"
 DEFAULT_SIDE="left"   # colonne des applications non listées
 LEFT_WIDTH_PCT=25     # largeur de la colonne gauche en % de l'écran (la droite prend le reste)
+LEFT_MIN_PX=600       # …sans descendre sous cette largeur : certaines apps de gauche ont une
+                      # largeur minimale et débordaient sur Chrome (écran du MacBook)
 # -----------------------------------------------------------------------------
 
 PIDFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.pid"
@@ -64,7 +66,9 @@ apply_width() {
   if [ -n "${screen_w:-}" ] && [ "$screen_w" -gt 0 ] 2>/dev/null; then
     # Redimensionner via une appli explicitement à gauche : une fenêtre d'une
     # appli non listée a pu s'ouvrir ailleurs depuis la dernière reconstruction.
-    aerospace resize --window-id "${left_anchor:-${left[0]}}" width $(( screen_w * LEFT_WIDTH_PCT / 100 )) \
+    local left_w=$(( screen_w * LEFT_WIDTH_PCT / 100 ))
+    (( left_w < LEFT_MIN_PX )) && left_w=$LEFT_MIN_PX
+    aerospace resize --window-id "${left_anchor:-${left[0]}}" width "$left_w" \
       && echo "$monitor" > "$STATEFILE"
   fi
 }
