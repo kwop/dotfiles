@@ -173,9 +173,10 @@ ctrl-shift-right = 'layout accordion vertical'
 
     # Hyper + lettre : afficher une app ; appuyer encore passe à sa fenêtre
     # suivante. Lettres hors de celles que Karabiner détourne dans Ghostty
-    # (h j k l n f i o). c et s sont au même endroit en QWERTY et en AZERTY.
+    # (h j k l n f i o p). c, s et u sont au même endroit en QWERTY et en AZERTY.
     cmd-ctrl-alt-shift-c = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.google.Chrome "Google Chrome"'
     cmd-ctrl-alt-shift-s = 'exec-and-forget ~/.config/aerospace/focus-app.sh org.whispersystems.signal-desktop Signal'
+    cmd-ctrl-alt-shift-u = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.anthropic.claudefordesktop Claude'
 
 alt-shift-right = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin next'
 alt-shift-left = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin prev'
