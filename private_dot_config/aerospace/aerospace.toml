@@ -164,11 +164,6 @@ ctrl-shift-right = 'layout accordion vertical'
     cmd-ctrl-alt-shift-slash = 'resize smart +50'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-    ctrl-alt-1 = 'workspace 1'
-    ctrl-alt-2 = 'workspace 2'
-    ctrl-alt-3 = 'workspace 3'
-    ctrl-alt-4 = 'workspace 4'
-    ctrl-alt-5 = 'workspace 5'
     # Hyper (Caps Lock maintenu) + chiffre
     cmd-ctrl-alt-shift-1 = 'workspace 1'
     cmd-ctrl-alt-shift-2 = 'workspace 2'
@@ -176,15 +171,12 @@ ctrl-shift-right = 'layout accordion vertical'
     cmd-ctrl-alt-shift-4 = 'workspace 4'
     cmd-ctrl-alt-shift-5 = 'workspace 5'
 
+    # Hyper + lettre : afficher une app ; appuyer encore passe à sa fenêtre
+    # suivante. Lettres hors de celles que Karabiner détourne dans Ghostty
+    # (h j k l n f i o). c et s sont au même endroit en QWERTY et en AZERTY.
+    cmd-ctrl-alt-shift-c = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.google.Chrome "Google Chrome"'
+    cmd-ctrl-alt-shift-s = 'exec-and-forget ~/.config/aerospace/focus-app.sh org.whispersystems.signal-desktop Signal'
 
-    # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-    # ctrl-alt-shift (et non alt-shift) : sur clavier AZERTY Mac, alt-shift-5
-    # = Option+Maj+( et volait le crochet '['.
-    ctrl-alt-shift-1 = 'move-node-to-workspace 1'
-    ctrl-alt-shift-2 = 'move-node-to-workspace 2'
-    ctrl-alt-shift-3 = 'move-node-to-workspace 3'
-    ctrl-alt-shift-4 = 'move-node-to-workspace 4'
-    ctrl-alt-shift-5 = 'move-node-to-workspace 5'
 alt-shift-right = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin next'
 alt-shift-left = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin prev'
 
