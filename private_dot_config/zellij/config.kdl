@@ -160,6 +160,8 @@ keybinds clear-defaults=true {
         bind "Ctrl Alt l" { MoveFocusOrTab "right"; }
         bind "Ctrl Alt n" { NewPane; }
         bind "Ctrl Alt o" { MoveTab "right"; }
+        // Épingler le pane flottant au premier plan (Hyper+p dans Ghostty via Karabiner)
+        bind "Ctrl Alt p" { TogglePanePinned; }
     }
     shared_except "locked" {
         bind "Ctrl g" { SwitchToMode "locked"; }
