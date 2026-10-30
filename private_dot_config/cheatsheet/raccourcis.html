@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><title>Raccourcis</title>
+<style>
+  /* Catppuccin Mocha */
+  :root{--base:#1e1e2e;--mantle:#181825;--s0:#313244;--s1:#45475a;--text:#cdd6f4;--sub:#a6adc8;
+        --yellow:#f9e2af;--mauve:#cba6f7;--blue:#89b4fa;--green:#a6e3a1;--peach:#fab387}
+  *{box-sizing:border-box}
+  body{margin:0;padding:22px 26px;background:var(--base);color:var(--text);
+       font:13px/1.45 -apple-system,"SF Pro Text",sans-serif}
+  h1{margin:0 0 4px;font-size:18px;color:var(--yellow)}
+  .hint{color:var(--sub);margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  section{background:var(--mantle);border:1px solid var(--s0);border-radius:10px;padding:12px 14px}
+  h2{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+  .wm h2{color:var(--blue)} .zj h2{color:var(--mauve)} .md h2{color:var(--green)}
+  h3{margin:12px 0 4px;font-size:12px;color:var(--peach)}
+  table{width:100%;border-collapse:collapse}
+  td{padding:3px 0;vertical-align:top} td:first-child{white-space:nowrap;padding-right:10px;width:1%}
+  kbd{display:inline-block;min-width:18px;padding:1px 6px;border-radius:5px;background:var(--s0);
+      border-bottom:2px solid var(--s1);font:12px "JetBrainsMono Nerd Font",ui-monospace,monospace;
+      color:var(--text);text-align:center}
+  .h{color:var(--yellow);font-weight:600}
+  .note{color:var(--sub);font-size:12px;margin-top:8px}
+</style></head><body>
+<h1>Raccourcis</h1>
+<p class="hint"><span class="h">Hyper</span> = Caps Lock maintenu · Caps Lock court = quick terminal · <kbd>Hyper</kbd> <kbd>?</kbd> affiche / masque cette page</p>
+<div class="grid">
+
+<section class="wm"><h2>Partout · AeroSpace &amp; Karabiner</h2>
+<table>
+<tr><td><kbd>Hyper</kbd> <kbd>1</kbd>…<kbd>6</kbd></td><td>Workspace 1 à 6 (6 = VNC)</td></tr>
+<tr><td><kbd>Hyper</kbd> <kbd>←↓↑→</kbd> / <kbd>h j k l</kbd></td><td>Fenêtre voisine, puis écran / workspace voisin</td></tr>
+<tr><td><kbd>Hyper</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>U</kbd></td><td>Chrome · Signal · Claude (encore = fenêtre suivante)</td></tr>
+<tr><td><kbd>Hyper</kbd> <kbd>-</kbd> <kbd>=</kbd></td><td>Réduire · agrandir</td></tr>
+<tr><td><kbd>Hyper</kbd> <kbd>Entrée</kbd></td><td>Plein écran (dans Ghostty : du panneau Zellij)</td></tr>
+<tr><td><kbd>Tab</kbd> maintenu</td><td>Sélecteur d'apps : <kbd>←</kbd><kbd>→</kbd> / <kbd>h</kbd><kbd>l</kbd>, <kbd>Échap</kbd> annule</td></tr>
+<tr><td><kbd>Hyper</kbd> <kbd>A</kbd> / <kbd>ù</kbd></td><td>Chrome : chercher un onglet</td></tr>
+</table>
+<h3>AeroSpace</h3>
+<table>
+<tr><td><kbd>⌥</kbd> <kbd>Tab</kbd></td><td>Workspace précédent</td></tr>
+<tr><td><kbd>⌥</kbd> <kbd>F</kbd></td><td>Plein écran</td></tr>
+<tr><td><kbd>⌥⇧</kbd> <kbd>A</kbd></td><td>Reconstruire le workspace 1 (2 colonnes)</td></tr>
+<tr><td><kbd>⌥⇧</kbd> <kbd>Z</kbd></td><td>Reconstruire le workspace 2 (accordéon)</td></tr>
+<tr><td><kbd>⌥⇧</kbd> <kbd>Tab</kbd></td><td>Mode service : <kbd>Échap</kbd> recharger, <kbd>R</kbd> réinitialiser, <kbd>F</kbd> flottant, <kbd>⌫</kbd> fermer les autres</td></tr>
+</table>
+</section>
+
+<section class="zj"><h2>Zellij · direct</h2>
+<p class="note" style="margin:0 0 6px">Dans Ghostty : <span class="h">Hyper</span> ou <kbd>⌃⌥</kbd></p>
+<table>
+<tr><td><kbd>←↓↑→</kbd> / <kbd>h j k l</kbd></td><td>Panneau voisin (au bord : onglet voisin)</td></tr>
+<tr><td><kbd>N</kbd></td><td>Nouveau panneau</td></tr>
+<tr><td><kbd>$</kbd> / <kbd>F</kbd></td><td>Afficher / masquer les flottants</td></tr>
+<tr><td><kbd>P</kbd></td><td>Épingler le flottant</td></tr>
+<tr><td><kbd>Entrée</kbd></td><td>Plein écran du panneau</td></tr>
+<tr><td><kbd>I</kbd> <kbd>O</kbd></td><td>Déplacer l'onglet ← →</td></tr>
+<tr><td><kbd>-</kbd> <kbd>=</kbd></td><td>Redimensionner</td></tr>
+</table>
+<h3>Ctrl seul</h3>
+<table>
+<tr><td><kbd>⌃</kbd> <kbd>Y</kbd></td><td>Harpoon (panneaux favoris)</td></tr>
+<tr><td><kbd>⌃</kbd> <kbd>G</kbd></td><td>Verrouiller / déverrouiller</td></tr>
+<tr><td><kbd>Échap</kbd> / <kbd>Entrée</kbd></td><td>Revenir au mode normal</td></tr>
+</table>
+</section>
+
+<section class="md"><h2>Zellij · modes</h2>
+<h3 style="margin-top:0"><kbd>⌃</kbd> <kbd>S</kbd> Scroll</h3>
+<table>
+<tr><td><kbd>(</kbd> <kbd>)</kbd></td><td>Prompt précédent / suivant</td></tr>
+<tr><td><kbd>S</kbd> · <kbd>E</kbd></td><td>Chercher · ouvrir dans l'éditeur</td></tr>
+<tr><td><kbd>U</kbd> <kbd>D</kbd> · <kbd>⌃C</kbd></td><td>Demi-page · revenir en bas</td></tr>
+</table>
+<h3><kbd>⌃</kbd> <kbd>O</kbd> Session</h3>
+<table>
+<tr><td><kbd>W</kbd></td><td>Gestionnaire de sessions</td></tr>
+<tr><td><kbd>(</kbd> <kbd>)</kbd></td><td>Descendre / remonter (Zellij imbriqué)</td></tr>
+<tr><td><kbd>F</kbd></td><td>Plein écran du Zellij imbriqué</td></tr>
+</table>
+<h3><kbd>⌃</kbd> <kbd>P</kbd> Panneau</h3>
+<table>
+<tr><td><kbd>F</kbd> · <kbd>S</kbd></td><td>Zoom · nouveau panneau empilé</td></tr>
+<tr><td><kbd>E</kbd> · <kbd>I</kbd></td><td>Flottant ↔ intégré · épingler</td></tr>
+<tr><td><kbd>R</kbd> <kbd>D</kbd> · <kbd>X</kbd></td><td>Nouveau à droite / en bas · fermer</td></tr>
+</table>
+<h3><kbd>⌃</kbd> <kbd>T</kbd> Onglet</h3>
+<table>
+<tr><td><kbd>1</kbd>…<kbd>9</kbd></td><td>Aller à l'onglet</td></tr>
+<tr><td><kbd>N</kbd> · <kbd>R</kbd> · <kbd>X</kbd></td><td>Nouveau · renommer · fermer</td></tr>
+</table>
+</section>
+
+</div>
+</body></html>
