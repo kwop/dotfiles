@@ -40,6 +40,24 @@ PIDFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.pid"
 LOCKDIR="${TMPDIR:-/tmp}/aerospace-two-accordions.lock"
 # Nom de l'écran sur lequel la largeur a été appliquée pour la dernière fois
 STATEFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.monitor"
+# Dernière fenêtre active non flottante (mise à jour à chaque changement de focus) :
+# c'est vers elle qu'on revient quand une popup Chrome se ferme.
+LASTFILE="${TMPDIR:-/tmp}/aerospace-last-tiled-window"
+
+# Workspace attitré de chaque app : À GARDER EN PHASE avec les règles
+# on-window-detected d'aerospace.toml (sert au rattrapage du mode --resize-only).
+home_workspace() {
+  case "$1" in
+    com.google.Chrome|org.whispersystems.signal-desktop|com.openai.chat|\
+    com.anthropic.claudefordesktop|net.whatsapp.WhatsApp|com.apple.MobileSMS) echo 1 ;;
+    com.jetbrains.intellij|com.jetbrains.datagrip|com.microsoft.VSCode|\
+    com.google.android.studio) echo 2 ;;
+    com.apple.Safari) echo 3 ;;
+    com.apple.ActivityMonitor|com.microsoft.teams2|com.microsoft.Outlook) echo 4 ;;
+    com.electron.dockerdesktop|com.electron.kontena-lens) echo 5 ;;
+    com.apple.finder|com.apple.ScreenSharing|com.realvnc.vncviewer) echo 6 ;;
+  esac
+}
 
 # Partition gauche/droite selon l'application (les flottantes restent à part)
 partition() {
@@ -83,7 +101,23 @@ apply_width() {
 # Mode léger, appelé à chaque changement de focus : un seul appel à aerospace
 # tant que le workspace reste visible sur le même écran.
 if (( RESIZE_ONLY )); then
+  IFS='|' read -r fid flayout fapp fws < <(aerospace list-windows --focused \
+    --format '%{window-id}|%{window-layout}|%{app-bundle-id}|%{workspace}' 2>/dev/null)
+  [ -n "${fid:-}" ] && [ "${flayout:-}" != floating ] && echo "$fid" > "$LASTFILE"
   [ -d "$LOCKDIR" ] && exit 0   # une reconstruction est en cours
+
+  # Rattrapage : une fenêtre (non flottante) d'une app à workspace attitré qui n'y
+  # est pas (rouverte, réaffichée, déplacée…) y est renvoyée, le focus la suit.
+  home=$(home_workspace "${fapp:-}")
+  if [ -n "${fid:-}" ] && [ "${flayout:-}" != floating ] && [ -n "$home" ] \
+     && [ "${fws:-}" != "$home" ] && [ "${fws:-}" != tmp-accordions ]; then
+    aerospace move-node-to-workspace --focus-follows-window --window-id "$fid" "$home"
+    case "$home" in
+      1) AEROSPACE_WINDOW_ID=$fid "$0" >/dev/null 2>&1 & ;;               # recomposer les 2 colonnes
+      2) ~/.config/aerospace/single-accordion.sh 2 >/dev/null 2>&1 & ;;   # accordéon unique
+    esac
+    exit 0
+  fi
   ws_info=$(aerospace list-workspaces --all --format '%{workspace}|%{workspace-is-visible}|%{monitor-name}' \
     | awk -F'|' -v ws="$WS" '$1 == ws { print $2 "|" $3 }')
   [ "${ws_info%%|*}" = true ] || exit 0   # invisible : ses colonnes ne sont pas encore redisposées
@@ -120,6 +154,22 @@ window_width_pct() {
 if (( MAYBE_POPUP )) && [ -n "${AEROSPACE_WINDOW_ID:-}" ]; then
   pct=$(window_width_pct "$AEROSPACE_WINDOW_ID")
   if [ -n "$pct" ] && [ "$pct" -lt "$POPUP_MAX_PCT" ] 2>/dev/null; then
+    # Popup : à sa fermeture, macOS active l'app précédente (ex. Bitwarden) puis
+    # Chrome ressort sa fenêtre « principale », pas celle d'origine. On note la
+    # fenêtre d'origine maintenant, on surveille la popup en arrière-plan (au plus
+    # 30 min) et on redonne le focus à la fenêtre d'origine quand elle disparaît.
+    prev=$(cat "$LASTFILE" 2>/dev/null)
+    if [ -n "$prev" ]; then
+      (
+        for _ in $(seq 1 6000); do
+          aerospace list-windows --all --format '%{window-id}' | grep -qx "$AEROSPACE_WINDOW_ID" || break
+          sleep 0.3
+        done
+        cur=$(aerospace list-windows --focused --format '%{window-id}' 2>/dev/null)
+        [ "$cur" != "$prev" ] && aerospace focus --window-id "$prev" 2>/dev/null
+      ) >/dev/null 2>&1 &
+      disown
+    fi
     exit 0
   fi
   aerospace layout tiling --window-id "$AEROSPACE_WINDOW_ID"
