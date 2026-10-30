@@ -1,7 +1,9 @@
 # Config propre au compte agent : Homebrew (installé et possédé par belaz), outils dans
 # ~/.local/bin, ssh-agent persistant avec la clé GitLab du compte de service.
 # Déployée uniquement pour agent : voir .chezmoiignore.
-eval "$(/opt/homebrew/bin/brew shellenv)"
+for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [[ -x $b ]] && { eval "$($b shellenv)"; break; }
+done
 export PATH="$HOME/.local/bin:$PATH"
 # Flutter/Dart : SDK courant de fvm et exécutables `dart pub global`
 export PATH="$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
