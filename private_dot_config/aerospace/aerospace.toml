@@ -52,7 +52,7 @@ automatically-unhide-macos-hidden-apps = true
 # even when they are invisible.
 # This config version is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
-persistent-workspaces = ["1", "2", "3", "4","5"]
+persistent-workspaces = ["1", "2", "3", "4", "5", "6"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -149,6 +149,12 @@ ctrl-shift-right = 'layout accordion vertical'
     cmd-ctrl-alt-shift-right = '''exec-and-forget aerospace focus right --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin next && aerospace focus --dfs-index 0; }'''
     cmd-ctrl-alt-shift-down = 'focus down'
     cmd-ctrl-alt-shift-up = 'focus up'
+    # Même chose avec h j k l (positions identiques en AZERTY et QWERTY). Dans
+    # Ghostty, Karabiner les renvoie à Zellij, comme les flèches.
+    cmd-ctrl-alt-shift-h = '''exec-and-forget aerospace focus left --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin prev && n=$(aerospace list-windows --workspace focused --count) && [ "$n" -gt 0 ] && aerospace focus --dfs-index $((n-1)); }'''
+    cmd-ctrl-alt-shift-j = 'focus down'
+    cmd-ctrl-alt-shift-k = 'focus up'
+    cmd-ctrl-alt-shift-l = '''exec-and-forget aerospace focus right --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin next && aerospace focus --dfs-index 0; }'''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
  
@@ -170,6 +176,7 @@ ctrl-shift-right = 'layout accordion vertical'
     cmd-ctrl-alt-shift-3 = 'workspace 3'
     cmd-ctrl-alt-shift-4 = 'workspace 4'
     cmd-ctrl-alt-shift-5 = 'workspace 5'
+    cmd-ctrl-alt-shift-6 = 'workspace 6'
 
     # Hyper + lettre : afficher une app ; appuyer encore passe à sa fenêtre
     # suivante. Lettres hors de celles que Karabiner détourne dans Ghostty
@@ -177,6 +184,14 @@ ctrl-shift-right = 'layout accordion vertical'
     cmd-ctrl-alt-shift-c = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.google.Chrome "Google Chrome"'
     cmd-ctrl-alt-shift-s = 'exec-and-forget ~/.config/aerospace/focus-app.sh org.whispersystems.signal-desktop Signal'
     cmd-ctrl-alt-shift-u = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.anthropic.claudefordesktop Claude'
+
+    # Hyper + ? (touche « , » de l'AZERTY = position du m en QWERTY) : aide-mémoire
+    # des raccourcis, affiché / masqué dans une fenêtre Quick Look.
+    cmd-ctrl-alt-shift-m = 'exec-and-forget /bin/bash ~/.config/cheatsheet/toggle.sh'
+
+    # Hyper + Entrée : plein écran de la fenêtre (comme alt-f). Dans Ghostty,
+    # Karabiner l'envoie à Zellij (plein écran du panneau).
+    cmd-ctrl-alt-shift-enter = 'fullscreen'
 
 alt-shift-right = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin next'
 alt-shift-left = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin prev'
@@ -269,6 +284,16 @@ run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-acco
 [[on-window-detected]]
 if.app-id = 'com.electron.dockerdesktop'
 run = 'move-node-to-workspace 5'
+
+# Workspace 6 : bureaux distants (VNC). Partage d'écran de macOS et RealVNC Viewer ;
+# pour un autre client, ajouter son app-id (aerospace list-apps).
+[[on-window-detected]]
+if.app-id = 'com.apple.ScreenSharing'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-id = 'com.realvnc.vncviewer'
+run = 'move-node-to-workspace 6'
 
 # Workspace 2 : toutes les fenêtres dans UN seul accordéon vertical plein
 # écran (pas de côte à côte). Le script aplatit l'arbre puis applique
