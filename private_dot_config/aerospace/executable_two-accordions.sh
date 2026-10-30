@@ -9,15 +9,21 @@
 # workspace a changé d'écran.
 # Les fenêtres flottantes (dialogues, alertes, demandes d'autorisation…) ne
 # déclenchent rien et restent hors des colonnes.
+# Avec --maybe-popup (nouvelle fenêtre Chrome, détectée en flottante par la règle
+# d'aerospace.toml pour garder sa taille d'origine) : si elle est étroite (popup de
+# connexion, OAuth, extension…), elle reste flottante sans reconstruction ;
+# sinon elle repasse en tuile et la reconstruction a lieu.
 set -u
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 WS=1
 FORCE=0
 RESIZE_ONLY=0
+MAYBE_POPUP=0
 case "${1:-}" in
   --force) FORCE=1 ;;
   --resize-only) RESIZE_ONLY=1 ;;
+  --maybe-popup) MAYBE_POPUP=1 ;;
 esac
 
 # ---- Affectation des applications (bundle id) à une colonne ----------------
@@ -27,6 +33,7 @@ DEFAULT_SIDE="left"   # colonne des applications non listées
 LEFT_WIDTH_PCT=25     # largeur de la colonne gauche en % de l'écran (la droite prend le reste)
 LEFT_MIN_PX=600       # …sans descendre sous cette largeur : certaines apps de gauche ont une
                       # largeur minimale et débordaient sur Chrome (écran du MacBook)
+POPUP_MAX_PCT=60      # fenêtre Chrome plus étroite que ce % de l'écran = popup
 # -----------------------------------------------------------------------------
 
 PIDFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.pid"
@@ -85,6 +92,37 @@ if (( RESIZE_ONLY )); then
   partition
   apply_width
   exit 0
+fi
+
+# Largeur d'une fenêtre en % de l'écran qui la contient (vide si inconnue).
+# Lue auprès de macOS : AeroSpace ne donne pas la taille des fenêtres.
+window_width_pct() {
+  osascript -l JavaScript -e '
+    ObjC.import("CoreGraphics"); ObjC.import("AppKit");
+    function run(argv) {
+      const list = ObjC.castRefToObject($.CGWindowListCopyWindowInfo(8, parseInt(argv[0])));
+      if (list.count < 1) return "";
+      const b = list.objectAtIndex(0).objectForKey("kCGWindowBounds");
+      const x = b.objectForKey("X").js, w = b.objectForKey("Width").js, cx = x + w / 2;
+      let sw = 0;
+      for (const s of $.NSScreen.screens.js) {
+        const f = s.frame;
+        if (cx >= f.origin.x && cx < f.origin.x + f.size.width) { sw = f.size.width; break; }
+      }
+      if (!sw) sw = $.NSScreen.mainScreen.frame.size.width;
+      return String(Math.round(w * 100 / sw));
+    }' "$1" 2>/dev/null
+}
+
+# Nouvelle fenêtre Chrome, arrivée flottante (taille d'origine intacte) : une
+# popup reste flottante et ne déclenche rien ; une vraie fenêtre (ou une taille
+# illisible) repasse en tuile, puis la reconstruction continue normalement.
+if (( MAYBE_POPUP )) && [ -n "${AEROSPACE_WINDOW_ID:-}" ]; then
+  pct=$(window_width_pct "$AEROSPACE_WINDOW_ID")
+  if [ -n "$pct" ] && [ "$pct" -lt "$POPUP_MAX_PCT" ] 2>/dev/null; then
+    exit 0
+  fi
+  aerospace layout tiling --window-id "$AEROSPACE_WINDOW_ID"
 fi
 
 # AeroSpace transmet la fenêtre détectée dans AEROSPACE_WINDOW_ID. Si elle est

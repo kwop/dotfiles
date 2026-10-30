@@ -253,9 +253,12 @@ run = 'layout floating'
 # (gauche/droite) par le script two-accordions.sh, qui décide aussi de la
 # colonne selon l'application. Surtout ne pas remettre 'layout h_tiles' ici :
 # cela transformerait l'accordéon vertical en tuiles horizontales.
+# Chrome arrive d'abord en flottant pour garder sa taille d'origine : le script
+# laisse les popups (connexion, OAuth, extensions…) flottantes sans rien
+# reconstruire, et remet les vraies fenêtres en tuile dans leur colonne.
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
+run = ['layout floating', 'move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh --maybe-popup']
 
 [[on-window-detected]]
 if.app-id = 'org.whispersystems.signal-desktop'
@@ -275,7 +278,7 @@ run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-acco
 
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
-run = ['move-node-to-workspace 1', 'exec-and-forget ~/.config/aerospace/two-accordions.sh']
+run = 'move-node-to-workspace 6'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.MobileSMS'
