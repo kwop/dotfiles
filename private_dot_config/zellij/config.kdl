@@ -116,6 +116,12 @@ keybinds clear-defaults=true {
             SwitchToMode "normal"
         }
         bind "Ctrl o" { SwitchToMode "normal"; }
+        // Sessions imbriquées (Zellij 0.45+) : ( descend dans la session invitée du
+        // panneau, ) remonte à la session hôte (depuis l'invitée), f bascule le plein
+        // écran de l'invitée dans l'hôte. ( ) plutôt que [ ] : crochets = Option+Maj en AZERTY.
+        bind "(" { FocusGuestSession; SwitchToMode "normal"; }
+        bind ")" { FocusHostSession; SwitchToMode "normal"; }
+        bind "f" { ToggleHostFullscreen; SwitchToMode "normal"; }
         bind "p" {
             LaunchOrFocusPlugin "plugin-manager" {
                 floating true
@@ -162,6 +168,8 @@ keybinds clear-defaults=true {
         bind "Ctrl Alt o" { MoveTab "right"; }
         // Épingler le pane flottant au premier plan (Hyper+p dans Ghostty via Karabiner)
         bind "Ctrl Alt p" { TogglePanePinned; }
+        // Plein écran du panneau actif (Hyper+Entrée dans Ghostty via Karabiner)
+        bind "Ctrl Alt Enter" { ToggleFocusFullscreen; }
     }
     shared_except "locked" {
         bind "Ctrl g" { SwitchToMode "locked"; }
