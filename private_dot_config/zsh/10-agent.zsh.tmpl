@@ -10,6 +10,9 @@ export PATH="$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$PATH"
 
 if [[ -o interactive ]]; then
     SSH_AGENT_DIR="$HOME/.ssh/agent"
+    # Durée de vie (s) de l'agent et des clés chargées : [data] ssh_key_lifetime dans
+    # ~/.config/chezmoi/chezmoi.toml (ex. 43200 sur mbp-intel-srv), 14400 par défaut.
+    SSH_KEY_LIFETIME={{ if hasKey . "ssh_key_lifetime" }}{{ .ssh_key_lifetime }}{{ else }}14400{{ end }}
     SSH_AUTH_SOCK="$SSH_AGENT_DIR/socket"
 
     mkdir -p "$SSH_AGENT_DIR"
@@ -23,7 +26,7 @@ if [[ -o interactive ]]; then
 
         ssh-agent \
             -a "$SSH_AUTH_SOCK" \
-            -t 14400 \
+            -t "$SSH_KEY_LIFETIME" \
             >/dev/null
     fi
 
@@ -41,7 +44,7 @@ if [[ -o interactive ]]; then
 
         if ! ssh-add -l 2>/dev/null | grep -Fq "$KEY_FP"; then
             echo "Unlock SSH key ${GITLAB_KEY:t}:"
-            ssh-add -t 4h "$GITLAB_KEY"
+            ssh-add -t "$SSH_KEY_LIFETIME" "$GITLAB_KEY"
         fi
     done
 fi
