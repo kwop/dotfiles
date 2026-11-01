@@ -36,6 +36,9 @@ fpath=(~/.zsh/completion $fpath)
 fpath=($HOME/.docker/completions $fpath)
 # compinit explicite : avant, il n'était lancé que par le bash_completion de nvm.
 autoload -Uz compinit && compinit
+# bashcompinit explicite aussi : fournit « complete » (kubectl, terraform plus bas), jusqu'ici
+# chargé lui aussi par le bash_completion de nvm, absent sur un serveur sans nvm.
+autoload -Uz bashcompinit && bashcompinit
 
 
 # Aliases
