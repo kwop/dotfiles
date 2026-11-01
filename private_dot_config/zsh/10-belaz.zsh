@@ -17,15 +17,21 @@
 fpath=(~/.zsh/completions $fpath)
 
 export PATH="$PATH:$HOME/Applications/Android\ Studio.app/Contents/jbr/Contents/Home/bin"
-export JAVA_HOME="$HOME/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+# (sans Android Studio, ex. serveur Intel : JAVA_HOME reste celui de mise)
+[[ -d "$HOME/Applications/Android Studio.app" ]] &&
+  export JAVA_HOME="$HOME/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export PATH="$PATH":"$HOME/fvm/default/bin:$HOME/.pub-cache/bin:$HOME/go/bin:$HOME/Library/Android/sdk/platform-tools"
 
 export HOMEBREW_CASK_OPTS="--appdir=~/Applications"
 
 LC_ALL=en_US.UTF-8
 
+# Préfixe Homebrew : /opt/homebrew (Apple Silicon) ou /usr/local (Intel). Sur un serveur sans
+# formule brew (outils via mise), ce qui manque est simplement ignoré plus bas.
+_brew=/opt/homebrew; [[ -x $_brew/bin/brew ]] || _brew=/usr/local
+
 # fpath and completion initialization (must be before bashcompinit)
-fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fpath=($_brew/share/zsh/site-functions $fpath)
 fpath=(~/.zsh/completion $fpath)
 fpath=($HOME/.docker/completions $fpath)
 # compinit explicite : avant, il n'était lancé que par le bash_completion de nvm.
@@ -46,12 +52,14 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Kubectl completion
-[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
-complete -F __start_kubectl k
+# Kubectl completion (l'ancien test, [[ /usr/local/bin/kubectl ]], était toujours vrai)
+if (( $+commands[kubectl] )); then
+  source <(kubectl completion zsh)
+  complete -F __start_kubectl k
+fi
 
 # Terraform completion
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
+(( $+commands[terraform] )) && complete -o nospace -C ${commands[terraform]} terraform
 
 # pipx
 export PATH="$PATH:$HOME/.local/bin:$HOME/.docker/bin"
@@ -74,7 +82,7 @@ export PATH="$HOME/.shorebird/bin:$PATH"
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # MySQL client
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+export PATH="$_brew/opt/mysql-client/bin:$PATH"
 
 if [[ "$TERMINAL_EMULATOR" == "JetBrains-JediTerm" ]]; then
   unset PROMPT_EOL_MARK
@@ -86,7 +94,8 @@ fi
 
 # fzf-tab : menu de complétion (Tab) dans fzf. Doit venir après compinit et avant
 # `fzf --zsh`, dont la complétion '**' retombe sur fzf-tab pour tout le reste.
-source /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
+[[ -r $_brew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh ]] && source $_brew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
+unset _brew
 zstyle ':completion:*:git-checkout:*' sort false
 zstyle ':completion:*:descriptions' format '[%d]'   # groupes ; pas de codes couleur ici
 zstyle ':completion:*' menu no
@@ -99,7 +108,7 @@ export FZF_DEFAULT_OPTS='--color=16'
 export BAT_THEME=ansi
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 
-source <(fzf --zsh)
+(( $+commands[fzf] )) && source <(fzf --zsh)
 
 # deja : suggestion grisée prédictive (dossier courant, fréquence, commande
 # précédente), à la place de zsh-autosuggestions (deja s'efface si les deux sont
@@ -116,7 +125,7 @@ export DEJA_DISMISS_KEY='^[[1;2D'
 export DEJA_CYCLE_FUZZY_KEY= DEJA_CYCLE_FUZZY_BACK_KEY=
 if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
   source "$HOME/.local/share/deja/init.zsh"
-else
+elif (( $+commands[deja] )); then
   eval "$(deja init zsh)"
 fi
 
@@ -137,8 +146,11 @@ _tab_accept_or_complete() {
   fi
   zle fzf-completion
 }
-zle -N _tab_accept_or_complete
-bindkey '^I' _tab_accept_or_complete
+# Sans fzf (pas de widget fzf-completion), Tab garde la complétion standard de zsh.
+if (( $+commands[fzf] )); then
+  zle -N _tab_accept_or_complete
+  bindkey '^I' _tab_accept_or_complete
+fi
 
 # o [requête] : ouvre n'importe quel fichier dans VS Code, sans changer de dossier.
 #   o ssh/config  -> ouvre directement ~/.ssh/config (chemin existant : pas de fzf)

@@ -5,6 +5,11 @@
 # .csv (Numbers), .html (Chrome), .log (Console). Relancé par chezmoi quand ce
 # fichier change ; nécessite duti (Brewfile).
 set -e
+# Sans VS Code (ex. serveur distant), rien à associer : pas d'échec de chezmoi apply.
+if [ ! -d "/Applications/Visual Studio Code.app" ] && [ ! -d "$HOME/Applications/Visual Studio Code.app" ]; then
+  echo "default-apps : VS Code absent, rien à faire"
+  exit 0
+fi
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 command -v duti >/dev/null || { echo "default-apps : duti absent (brew install duti)" >&2; exit 1; }
 
