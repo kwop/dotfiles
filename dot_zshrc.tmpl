@@ -5,9 +5,15 @@
 
 # Compte secondaire (profil ≠ complet) : resynchronise la config depuis la source de belaz avant de charger
 # les modules. Non bloquant : en cas d'échec, la config déjà en place est conservée.
-if [[ -o interactive && -x /opt/homebrew/bin/chezmoi ]]; then
-  /opt/homebrew/bin/chezmoi apply --force --no-tty >/dev/null 2>&1 ||
-    print -u2 "chezmoi apply a échoué, config actuelle conservée (détails : chezmoi apply)"
+# chezmoi de Homebrew : /opt/homebrew sur Apple Silicon, /usr/local sur Intel.
+if [[ -o interactive ]]; then
+  for c in /opt/homebrew/bin/chezmoi /usr/local/bin/chezmoi; do
+    [[ -x $c ]] || continue
+    $c apply --force --no-tty >/dev/null 2>&1 ||
+      print -u2 "chezmoi apply a échoué, config actuelle conservée (détails : chezmoi apply)"
+    break
+  done
+  unset c
 fi
 {{- end }}
 
