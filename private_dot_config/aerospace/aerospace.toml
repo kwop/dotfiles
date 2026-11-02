@@ -160,14 +160,20 @@ ctrl-shift-right = 'layout accordion vertical'
  
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+    # 'width' et non 'smart' : dans les colonnes en accordéon, 'smart +50' réduisait
+    # la fenêtre au lieu de l'agrandir.
     # ctrl-alt-cmd : alt seul volait '}' (Option+)) sur AZERTY Mac, et
     # ctrl-alt entrait en conflit avec le resize des panes Zellij.
-    # Positions QWERTY -> AZERTY : 'equal' = touche '-', 'slash' = touche '='.
-    ctrl-alt-cmd-equal = 'resize smart -50'
-    ctrl-alt-cmd-slash = 'resize smart +50'
+    # Positions QWERTY -> AZERTY Mac (disposition « Français », clavier du Mac) :
+    # 'equal' = touche '-', 'slash' = touche '='. En « Français – PC » (Rekt),
+    # Karabiner traduit ')' -> equal et '=' -> slash (le '-' y est sur le 6, pris
+    # par le workspace 6), voir la règle « Français – PC (Rekt) ».
+    ctrl-alt-cmd-equal = 'resize width -50'
+    ctrl-alt-cmd-slash = 'resize width +50'
     # Hyper + '-' / '=' (dans Ghostty : resize des panes Zellij via Karabiner)
-    cmd-ctrl-alt-shift-equal = 'resize smart -50'
-    cmd-ctrl-alt-shift-slash = 'resize smart +50'
+    cmd-ctrl-alt-shift-equal = 'resize width -50'
+    # Pas de cmd-ctrl-alt-shift-slash : ⌃⌥⇧⌘/ est intercepté avant AeroSpace.
+    # Karabiner renvoie Hyper + '=' vers ctrl-alt-cmd-slash (ci-dessus).
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
     # Hyper (Caps Lock maintenu) + chiffre
