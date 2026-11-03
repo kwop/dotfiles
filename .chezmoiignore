@@ -15,7 +15,10 @@
 !.config/zsh
 !.config/zsh/50-prompt.zsh
 !.config/zsh/60-eza.zsh
+!.config/zsh/80-atuin.zsh
 !.config/zsh/90-zoxide.zsh
+!.config/atuin
+!.config/atuin/config.toml
 !.config/starship.toml
 !.config/zellij
 !.config/zellij/config.kdl
@@ -24,7 +27,13 @@
 !git-includes.sh
 {{- if eq $profil "agent" }}
 !.config/zsh/10-agent.zsh
+{{-   if hasKey . "ssh_hosts" }}
+!.ssh
+!.ssh/config
+{{-   end }}
 {{- end }}
 {{- else }}
 .config/zsh/10-agent.zsh
+# ~/.ssh/config de belaz : écrit à la main, jamais géré par chezmoi
+.ssh
 {{- end }}

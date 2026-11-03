@@ -17,6 +17,8 @@ tap "wpscanteam/tap"
 brew "tree"
 # Automate deployment, configuration, and upgrading
 brew "ansible"
+# Shell history in a local database (Ctrl R), see .config/zsh/80-atuin.zsh
+brew "atuin"
 # Official Amazon AWS command-line interface
 brew "awscli"
 # Interpreted, interactive, object-oriented programming language

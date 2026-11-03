@@ -1,0 +1,23 @@
+# ~/.ssh/config du compte agent, géré par chezmoi (kwop/dotfiles) : un bloc par entrée
+# [[data.ssh_hosts]] du chezmoi.toml du compte (host, hostname, user, key, cloudflared
+# facultatif). Le fichier entier est géré : jamais rendu pour belaz, voir .chezmoiignore.
+{{- /* cloudflared en chemin absolu, parce que le ProxyCommand peut tourner sans le PATH
+       d'un shell interactif : brew Apple Silicon, shim mise (Mac Intel sans formule brew,
+       même si une formule traîne dans /usr/local), puis brew Intel. Rien de trouvé : nom nu,
+       résolu par le PATH. */}}
+{{- $cloudflared := "cloudflared" }}
+{{- range list "/opt/homebrew/bin/cloudflared" (joinPath .chezmoi.homeDir ".local/share/mise/shims/cloudflared") "/usr/local/bin/cloudflared" }}
+{{-   if and (eq $cloudflared "cloudflared") (stat .) }}{{ $cloudflared = . }}{{ end }}
+{{- end }}
+{{- range .ssh_hosts }}
+
+Host {{ .host }}
+  HostName {{ .hostname }}
+  User {{ .user }}
+  IdentityFile ~/.ssh/{{ .key }}
+  IdentitiesOnly yes
+{{- if get . "cloudflared" }}
+  # Derrière Cloudflare Access : SSH par cloudflared
+  ProxyCommand {{ $cloudflared }} access ssh --hostname %h
+{{- end }}
+{{- end }}

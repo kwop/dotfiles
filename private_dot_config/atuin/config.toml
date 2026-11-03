@@ -1,0 +1,5 @@
+# Config atuin, commune à belaz et agent, gérée par chezmoi (kwop/dotfiles).
+# Historique local uniquement, même après un `atuin login` : l'historique d'un compte agent
+# peut contenir des secrets tapés en ligne de commande, il ne doit pas partir vers un serveur.
+auto_sync = false
+update_check = false
