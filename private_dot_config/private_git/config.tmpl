@@ -4,6 +4,7 @@
 #   git_ssh_key    clé de ~/.ssh utilisée par git (sinon : choix de ssh)
 #   git_includes   config par dossier ({gitdir, path}), prioritaire sur ce qui précède
 #                  + ssh_key facultatif : fichier `path` rempli par run_onchange_after_git-includes.sh
+#   safe_directories  dépôts d'autres comptes acceptés par git (safe.directory)
 [alias]
 	cm = commit -m
 	s = status -s
@@ -20,6 +21,16 @@
 	autoStash = true
 [merge]
 	autoStash = true
+{{- if hasKey . "safe_directories" }}
+
+# Dépôts d'autres comptes (ex. /Users/Shared/code/* partagé entre belaz et agent) : rendus ici,
+# fichier reçu par tous les profils, et non ajoutés par « git config --global », qui écrit dans
+# ce fichier quand ~/.gitconfig manque (agent) et que chezmoi réécrit à chaque shell.
+[safe]
+{{- range .safe_directories }}
+	directory = {{ . }}
+{{- end }}
+{{- end }}
 {{- if and (hasKey . "email") (hasKey . "name") }}
 
 [user]
