@@ -836,6 +836,42 @@
             ]
           },
           {
+            "description": "IntelliJ IDEA : Hyper + Entrée → ⌘⇧F12 (masquer tous les panneaux) ; ailleurs Hyper + Entrée reste le fullscreen d'AeroSpace",
+            "manipulators": [
+              {
+                "type": "basic",
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.jetbrains\\.intellij"
+                    ]
+                  }
+                ],
+                "from": {
+                  "key_code": "return_or_enter",
+                  "modifiers": {
+                    "mandatory": [
+                      "left_command",
+                      "left_control",
+                      "left_option",
+                      "left_shift"
+                    ]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "f12",
+                    "modifiers": [
+                      "left_command",
+                      "left_shift"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "description": "Caps Lock : tap = ⌃⌥M (quick terminal), maintenu = Hyper ⌘⌃⌥⇧",
             "manipulators": [
               {
