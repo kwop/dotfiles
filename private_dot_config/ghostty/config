@@ -8,7 +8,17 @@ theme = Catppuccin Mocha
 
 background-opacity = 0.92
 
-cursor-style = bar
+# Curseur : bloc plein jaune vif qui clignote, hors palette pastel du thème
+# pour repérer d'un coup d'œil la fenêtre active (dans une fenêtre inactive,
+# Ghostty le dessine en bloc creux). Le texte sous le curseur reprend le fond
+# du thème pour rester lisible.
+cursor-style = block
+cursor-style-blink = true
+cursor-color = #ffd400
+cursor-text = #1e1e2e
+# Sans 'no-cursor', l'intégration shell de Ghostty remet une barre au prompt,
+# quel que soit cursor-style (les autres fonctions de l'intégration restent).
+shell-integration-features = no-cursor
 
 
 # =========================
