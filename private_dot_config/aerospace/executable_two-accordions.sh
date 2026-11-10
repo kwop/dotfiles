@@ -10,8 +10,9 @@
 # Les fenêtres flottantes (dialogues, alertes, demandes d'autorisation…) ne
 # déclenchent rien et restent hors des colonnes.
 # Avec --maybe-popup (nouvelle fenêtre Chrome, détectée en flottante par la règle
-# d'aerospace.toml pour garder sa taille d'origine) : si elle est étroite (popup de
-# connexion, OAuth, extension…), elle reste flottante sans reconstruction ;
+# d'aerospace.toml pour garder sa taille d'origine) : si elle est petite, en largeur
+# ET en hauteur (popup de connexion, OAuth, extension…), elle reste flottante sans
+# reconstruction ;
 # sinon elle repasse en tuile et la reconstruction a lieu.
 set -u
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
@@ -33,7 +34,12 @@ DEFAULT_SIDE="left"   # colonne des applications non listées
 LEFT_WIDTH_PCT=25     # largeur de la colonne gauche en % de l'écran (la droite prend le reste)
 LEFT_MIN_PX=600       # …sans descendre sous cette largeur : certaines apps de gauche ont une
                       # largeur minimale et débordaient sur Chrome (écran du MacBook)
-POPUP_MAX_PCT=60      # fenêtre Chrome plus étroite que ce % de l'écran = popup
+POPUP_MAX_PCT=60      # fenêtre Chrome plus étroite que ce % de l'écran…
+POPUP_MAX_H_PX=800    # …ET moins haute que ça = popup. La largeur seule ne suffit pas :
+                      # Chrome rouvre ses fenêtres à leur dernière taille en pixels, prise
+                      # sur un autre écran (ex. 1175 px = 46 % d'un LG 2560 px). Une vraie
+                      # fenêtre, toujours en tuile pleine hauteur, dépasse 800 px, même
+                      # sur le MacBook (~925 px) ; les popups (OAuth, extensions) non.
 # -----------------------------------------------------------------------------
 
 PIDFILE="${TMPDIR:-/tmp}/aerospace-two-accordions.pid"
@@ -128,9 +134,10 @@ if (( RESIZE_ONLY )); then
   exit 0
 fi
 
-# Largeur d'une fenêtre en % de l'écran qui la contient (vide si inconnue).
+# Largeur d'une fenêtre en % de l'écran qui la contient, puis sa hauteur en
+# pixels, séparées par une espace (vide si inconnue).
 # Lue auprès de macOS : AeroSpace ne donne pas la taille des fenêtres.
-window_width_pct() {
+window_size() {
   osascript -l JavaScript -e '
     ObjC.import("CoreGraphics"); ObjC.import("AppKit");
     function run(argv) {
@@ -144,7 +151,7 @@ window_width_pct() {
         if (cx >= f.origin.x && cx < f.origin.x + f.size.width) { sw = f.size.width; break; }
       }
       if (!sw) sw = $.NSScreen.mainScreen.frame.size.width;
-      return String(Math.round(w * 100 / sw));
+      return Math.round(w * 100 / sw) + " " + Math.round(b.objectForKey("Height").js);
     }' "$1" 2>/dev/null
 }
 
@@ -152,8 +159,10 @@ window_width_pct() {
 # popup reste flottante et ne déclenche rien ; une vraie fenêtre (ou une taille
 # illisible) repasse en tuile, puis la reconstruction continue normalement.
 if (( MAYBE_POPUP )) && [ -n "${AEROSPACE_WINDOW_ID:-}" ]; then
-  pct=$(window_width_pct "$AEROSPACE_WINDOW_ID")
-  if [ -n "$pct" ] && [ "$pct" -lt "$POPUP_MAX_PCT" ] 2>/dev/null; then
+  read -r pct h < <(window_size "$AEROSPACE_WINDOW_ID")
+  if [ -n "${pct:-}" ] && [ -n "${h:-}" ] \
+     && [ "$pct" -lt "$POPUP_MAX_PCT" ] 2>/dev/null \
+     && [ "$h" -lt "$POPUP_MAX_H_PX" ] 2>/dev/null; then
     # Popup : à sa fermeture, macOS active l'app précédente (ex. Bitwarden) puis
     # Chrome ressort sa fenêtre « principale », pas celle d'origine. On note la
     # fenêtre d'origine maintenant, on surveille la popup en arrière-plan (au plus
