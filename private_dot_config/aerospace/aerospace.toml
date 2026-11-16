@@ -92,7 +92,6 @@ on-mode-changed = []
 # 'main' binding mode must be always presented
 # Fallback value (if you omit the key): mode.main.binding = {}
 [mode.main.binding]
-alt-f = 'fullscreen'
 # Reconstruit le workspace 1 en deux accordéons verticaux (gauche/droite)
 alt-shift-a = 'exec-and-forget ~/.config/aerospace/two-accordions.sh --force'
 # Reconstruit le workspace 2 en un seul accordéon vertical plein écran
@@ -136,21 +135,20 @@ ctrl-shift-up = ['split horizontal', 'layout accordion']
 ctrl-shift-left = 'layout accordion horizontal'
 ctrl-shift-right = 'layout accordion vertical'
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-    ctrl-alt-cmd-left = 'focus left'
-    ctrl-alt-cmd-down = 'focus down'
-    ctrl-alt-cmd-up = 'focus up'
-    ctrl-alt-cmd-right = 'focus right'
-    # Hyper (Caps Lock maintenu, via Karabiner) + flèches. Dans Ghostty, Karabiner
-    # renvoie ⌃⌥ + flèches à la place pour naviguer dans les panes Zellij.
-    # Gauche/droite : passe à l'autre écran s'il y en a un de ce côté ; au bord
-    # extérieur, passe au workspace précédent/suivant de l'écran (en boucle) et
-    # sélectionne la fenêtre la plus proche du bord d'arrivée.
-    cmd-ctrl-alt-shift-left = '''exec-and-forget aerospace focus left --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin prev && n=$(aerospace list-windows --workspace focused --count) && [ "$n" -gt 0 ] && aerospace focus --dfs-index $((n-1)); }'''
-    cmd-ctrl-alt-shift-right = '''exec-and-forget aerospace focus right --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin next && aerospace focus --dfs-index 0; }'''
+    # Hyper (Caps Lock ou ù maintenu, via Karabiner) + flèches.
+    # Gauche/droite : workspace précédent/suivant (en boucle), partout, y compris
+    # dans Ghostty. Remplace alt-shift-left/right, qui volait la sélection mot
+    # par mot de macOS (⌥⇧←/→).
+    # Haut/bas : fenêtre au-dessus/en dessous (dans Ghostty, Karabiner renvoie
+    # ⌃⌥ + ↑/↓ à Zellij). Pour passer d'une fenêtre à l'autre : Hyper + h j k l.
+    cmd-ctrl-alt-shift-left = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin prev'
+    cmd-ctrl-alt-shift-right = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin next'
     cmd-ctrl-alt-shift-down = 'focus down'
     cmd-ctrl-alt-shift-up = 'focus up'
-    # Même chose avec h j k l (positions identiques en AZERTY et QWERTY). Dans
-    # Ghostty, Karabiner les renvoie à Zellij, comme les flèches.
+    # Hyper + h j k l (positions identiques en AZERTY et QWERTY) : fenêtres.
+    # h/l : fenêtre à gauche/droite, passe à l'autre écran s'il y en a un de ce
+    # côté ; au bord extérieur, workspace précédent/suivant de l'écran (en boucle).
+    # Dans Ghostty, Karabiner les renvoie à Zellij (panes/onglets).
     cmd-ctrl-alt-shift-h = '''exec-and-forget aerospace focus left --boundaries all-monitors-outer-frame --boundaries-action fail || { aerospace list-workspaces --monitor focused | aerospace workspace --wrap-around --stdin prev && n=$(aerospace list-windows --workspace focused --count) && [ "$n" -gt 0 ] && aerospace focus --dfs-index $((n-1)); }'''
     cmd-ctrl-alt-shift-j = 'focus down'
     cmd-ctrl-alt-shift-k = 'focus up'
@@ -186,21 +184,22 @@ ctrl-shift-right = 'layout accordion vertical'
 
     # Hyper + lettre : afficher une app ; appuyer encore passe à sa fenêtre
     # suivante. Lettres hors de celles que Karabiner détourne dans Ghostty
-    # (h j k l n f i o p). c, s et u sont au même endroit en QWERTY et en AZERTY.
+    # (h j k l n f i o p y). c, s et u sont au même endroit en QWERTY et en AZERTY.
     cmd-ctrl-alt-shift-c = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.google.Chrome "Google Chrome"'
     cmd-ctrl-alt-shift-s = 'exec-and-forget ~/.config/aerospace/focus-app.sh org.whispersystems.signal-desktop Signal'
     cmd-ctrl-alt-shift-u = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.anthropic.claudefordesktop Claude'
+    # e et x : même position en QWERTY et en AZERTY (main gauche : avec l'Hyper droit, ù).
+    cmd-ctrl-alt-shift-e = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.jetbrains.intellij "IntelliJ IDEA"'
+    cmd-ctrl-alt-shift-x = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.apple.finder Finder'
 
     # Hyper + ? (touche « , » de l'AZERTY = position du m en QWERTY) : aide-mémoire
     # des raccourcis, affiché / masqué dans une fenêtre Quick Look.
     cmd-ctrl-alt-shift-m = 'exec-and-forget /bin/bash ~/.config/cheatsheet/toggle.sh'
 
-    # Hyper + Entrée : plein écran de la fenêtre (comme alt-f). Dans Ghostty,
+    # Hyper + Entrée : plein écran de la fenêtre. Dans Ghostty,
     # Karabiner l'envoie à Zellij (plein écran du panneau).
     cmd-ctrl-alt-shift-enter = 'fullscreen'
 
-alt-shift-right = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin next'
-alt-shift-left = 'exec-and-forget aerospace list-workspaces --all | aerospace workspace --wrap-around --stdin prev'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'

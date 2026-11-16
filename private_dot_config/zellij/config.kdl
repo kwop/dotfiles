@@ -168,6 +168,14 @@ keybinds clear-defaults=true {
         bind "Ctrl Alt o" { MoveTab "right"; }
         // Épingler le pane flottant au premier plan (Hyper+p dans Ghostty via Karabiner)
         bind "Ctrl Alt p" { TogglePanePinned; }
+        // Harpoon-select (github.com/krgn/harpoon-select, v0.4.1) : recherche floue
+        // dans tous les panes de tous les onglets, sans liste de favoris. Essai en
+        // parallèle de harpoon. Hyper + Y dans Ghostty (Karabiner envoie ⌃⌥Y).
+        bind "Ctrl Alt y" {
+            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/harpoon-select.wasm" {
+                floating true; move_to_focused_tab true;
+            }
+        }
         // Plein écran du panneau actif (Hyper+Entrée dans Ghostty via Karabiner)
         bind "Ctrl Alt Enter" { ToggleFocusFullscreen; }
     }
