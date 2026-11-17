@@ -191,6 +191,9 @@ ctrl-shift-right = 'layout accordion vertical'
     # e et x : même position en QWERTY et en AZERTY (main gauche : avec l'Hyper droit, ù).
     cmd-ctrl-alt-shift-e = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.jetbrains.intellij "IntelliJ IDEA"'
     cmd-ctrl-alt-shift-x = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.apple.finder Finder'
+    # t et d : même position en QWERTY et en AZERTY.
+    cmd-ctrl-alt-shift-t = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.microsoft.teams2 "Microsoft Teams"'
+    cmd-ctrl-alt-shift-d = 'exec-and-forget ~/.config/aerospace/focus-app.sh com.jetbrains.datagrip DataGrip'
 
     # Hyper + ? (touche « , » de l'AZERTY = position du m en QWERTY) : aide-mémoire
     # des raccourcis, affiché / masqué dans une fenêtre Quick Look.
